@@ -1,0 +1,13 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"       # Для HTTP
+      - "443:443"     # Для HTTPS
+    volumes:
+      - "/etc/letsencrypt/live/master-turov.ru/fullchain.pem:/crt/cert.pem"
+      - "/etc/letsencrypt/live/master-turov.ru/privkey.pem:/crt/priv.pem"
