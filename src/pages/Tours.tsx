@@ -1,13 +1,20 @@
-import { useEffect } from 'react';
+'use client';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-
-
 
 const Tours = () => {
   const { t } = useTranslation();
+  const [widgetKey, setWidgetKey] = useState(0);
 
   useEffect(() => {
-    // Create configuration script
+    
+    const existingScript = document.querySelector('script[src="//tourvisor.ru/module/init.js"]');
+    if (existingScript) {
+      existingScript.remove();
+      console.log('Удален старый скрипт Tourvisor');
+    }
+
+    
     const configScript = document.createElement('script');
     configScript.type = 'text/javascript';
     configScript.innerHTML = `
@@ -19,17 +26,20 @@ const Tours = () => {
     `;
     document.head.appendChild(configScript);
 
-    // Load Tourvisor script
+    
     const script = document.createElement('script');
     script.src = '//tourvisor.ru/module/init.js';
     script.async = true;
+    script.onload = () => {
+      console.log('Tourvisor script загружен');
+      setWidgetKey((prev) => prev + 1);
+    };
     document.body.appendChild(script);
 
     return () => {
       document.head.removeChild(configScript);
-      if (script.parentNode) {
-        document.body.removeChild(script);
-      }
+      script.remove();
+      console.log('Tourvisor script удален при размонтировании');
     };
   }, [t]);
 
@@ -40,7 +50,7 @@ const Tours = () => {
           {t('nav.tours')}
         </h1>
         <div className="bg-white rounded-lg shadow-md p-6">
-          <div id="tv-search-form" />
+          <div key={widgetKey} id="tv-search-form" className="tv-search-form"></div>
         </div>
       </div>
     </div>
