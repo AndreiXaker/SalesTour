@@ -5,6 +5,12 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import enTranslations from './locales/en.json';
 import ruTranslations from './locales/ru.json';
 
+
+const getInitialLanguage = () => {
+  const savedLang = localStorage.getItem('language');
+  return savedLang || 'en'; 
+};
+
 i18n
   .use(LanguageDetector)
   .use(initReactI18next)
@@ -17,10 +23,16 @@ i18n
         translation: ruTranslations,
       },
     },
-    fallbackLng: 'ru',
+    lng: getInitialLanguage(), 
+    fallbackLng: 'en', 
     interpolation: {
       escapeValue: false,
     },
   });
+
+
+i18n.on('languageChanged', (lng) => {
+  localStorage.setItem('language', lng);
+});
 
 export default i18n;
