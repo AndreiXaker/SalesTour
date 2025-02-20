@@ -6,7 +6,8 @@ const LanguageSwitch = () => {
 
   const toggleLanguage = () => {
     const newLang = i18n.language === 'ru' ? 'en' : 'ru';
-    i18n.changeLanguage(newLang);
+    i18n.changeLanguage(newLang); 
+    localStorage.setItem('language', newLang); 
   };
 
   return (

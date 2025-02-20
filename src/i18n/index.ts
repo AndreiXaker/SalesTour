@@ -5,10 +5,10 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import enTranslations from './locales/en.json';
 import ruTranslations from './locales/ru.json';
 
-
+// Функция для получения языка из localStorage или fallback на 'ru'
 const getInitialLanguage = () => {
   const savedLang = localStorage.getItem('language');
-  return savedLang || 'en'; 
+  return savedLang || 'ru'; // Если язык не найден в localStorage, используем 'ru'
 };
 
 i18n
@@ -24,12 +24,11 @@ i18n
       },
     },
     lng: getInitialLanguage(), 
-    fallbackLng: 'en', 
+    fallbackLng: 'ru', 
     interpolation: {
       escapeValue: false,
     },
   });
-
 
 i18n.on('languageChanged', (lng) => {
   localStorage.setItem('language', lng);

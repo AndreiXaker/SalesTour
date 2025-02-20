@@ -25,6 +25,7 @@ const Insurance = () => {
     };
     
     const colors = {
+      primary : "#badbad",
       background: "transparent"
     };
     

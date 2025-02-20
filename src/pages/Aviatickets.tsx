@@ -1,6 +1,8 @@
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Plane, Send, MessageCircle } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import axios from 'axios';
+import { useState } from 'react';
 
 interface FlightFormData {
   from: string;
@@ -15,40 +17,43 @@ interface FlightFormData {
 
 const Aviatickets = () => {
   const { t } = useTranslation();
-  const [formData, setFormData] = useState<FlightFormData>({
-    from: '',
-    to: '',
-    departDate: '',
-    returnDate: '',
-    passengers: '1',
-    name: '',
-    contact: '',
-    comments: ''
-  });
+  const { register, handleSubmit, formState: { errors } } = useForm<FlightFormData>();
+  const [statusMessage, setStatusMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false); // Новое состояние для контроля кнопки
+  const [consent, setConsent] = useState(false);
 
-  const formatMessage = () => {
-    return encodeURIComponent(`
-🛫 Запрос на авиабилеты
+  const onSubmit = async (data: FlightFormData) => {
+    if (isSubmitting) return; // Если запрос уже выполняется, выходим
 
-Откуда: ${formData.from}
-Куда: ${formData.to}
-Дата вылета: ${formData.departDate}
-Дата возврата: ${formData.returnDate}
-Количество пассажиров: ${formData.passengers}
+    setIsSubmitting(true); // Устанавливаем состояние отправки
 
-Имя: ${formData.name}
-Контакт: ${formData.contact}
-Комментарии: ${formData.comments}
-    `.trim());
-  };
-
-  const handleSubmit = (platform: 'whatsapp' | 'telegram') => {
-    const message = formatMessage();
-    const urls = {
-      whatsapp: `https://wa.me/79339191515?text=${message}`,
-      telegram: `https://t.me/master_turov_bot?start=${message}`
+    const jsonPayload = {
+      name: data.name,
+      phone: data.contact,
+      email: "ivan@example.com", 
+      departure_city: data.from,
+      destination_city: data.to,
+      departure_date: data.departDate,
+      return_date: data.returnDate,
+      passengers_count: Number(data.passengers),
+      transport_type: "plane", 
+      comment: data.comments,
+      consent: consent 
     };
-    window.open(urls[platform], '_blank');
+    
+    try {
+      const response = await axios.post('https://master-turov.ru:8443/users/api/v1/request-ticket/', jsonPayload);
+      console.log('Response:', response.data);
+      setStatusMessage('Запрос успешно отправлен!');
+    } catch (error) {
+      console.error('Error:', error);
+      setStatusMessage('Произошла ошибка при отправке запроса.');
+    } finally {
+      setTimeout(() => {
+        setIsSubmitting(false); // Включаем кнопку снова через 5 секунд
+        setStatusMessage(''); // Сбрасываем сообщение
+      }, 5000);
+    }
   };
 
   return (
@@ -61,130 +66,146 @@ const Aviatickets = () => {
               {t('nav.aviatickets')}
             </h1>
           </div>
-
+          {statusMessage && (
+            <div className="mb-4 text-center text-lg text-green-600">
+              {statusMessage}
+            </div>
+          )}
           <div className="bg-white rounded-lg shadow-md p-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Откуда
-                </label>
-                <input
-                  type="text"
-                  value={formData.from}
-                  onChange={(e) => setFormData({ ...formData, from: e.target.value })}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  placeholder="Город вылета"
-                />
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Откуда
+                  </label>
+                  <input
+                    type="text"
+                    {...register('from', { required: 'Это поле обязательно' })}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    placeholder="Город вылета"
+                  />
+                  {errors.from && <span className="text-red-500">{errors.from.message}</span>}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Куда
+                  </label>
+                  <input
+                    type="text"
+                    {...register('to', { required: 'Это поле обязательно' })}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    placeholder="Город прилета"
+                  />
+                  {errors.to && <span className="text-red-500">{errors.to.message}</span>}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Дата вылета
+                  </label>
+                  <input
+                    type="date"
+                    {...register('departDate', { required: 'Это поле обязательно' })}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  />
+                  {errors.departDate && <span className="text-red-500">{errors.departDate.message}</span>}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Дата возврата
+                  </label>
+                  <input
+                    type="date"
+                    {...register('returnDate')}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  />
+                </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Куда
-                </label>
-                <input
-                  type="text"
-                  value={formData.to}
-                  onChange={(e) => setFormData({ ...formData, to: e.target.value })}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  placeholder="Город прилета"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Дата вылета
-                </label>
-                <input
-                  type="date"
-                  value={formData.departDate}
-                  onChange={(e) => setFormData({ ...formData, departDate: e.target.value })}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Дата возврата
-                </label>
-                <input
-                  type="date"
-                  value={formData.returnDate}
-                  onChange={(e) => setFormData({ ...formData, returnDate: e.target.value })}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                />
-              </div>
-            </div>
 
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Количество пассажиров
-              </label>
-              <select
-                value={formData.passengers}
-                onChange={(e) => setFormData({ ...formData, passengers: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-              >
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
-                  <option key={num} value={num}>
-                    {num} {num === 1 ? 'пассажир' : num < 5 ? 'пассажира' : 'пассажиров'}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div>
+              <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Ваше имя
+                  Количество пассажиров
                 </label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                <select
+                  {...register('passengers')}
                   className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  placeholder="Как к вам обращаться"
+                >
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+                    <option key={num} value={num}>
+                      {num} {num === 1 ? 'пассажир' : num < 5 ? 'пассажира' : 'пассажиров'}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Ваше имя
+                  </label>
+                  <input
+                    type="text"
+                    {...register('name', { required: 'Это поле обязательно' })}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    placeholder="Как к вам обращаться"
+                  />
+                  {errors.name && <span className="text-red-500">{errors.name.message}</span>}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Контактный телефон
+                  </label>
+                  <input
+                    type="tel"
+                    {...register('contact', { required: 'Это поле обязательно' })}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    placeholder="+7 (___) ___-__-__"
+                  />
+                  {errors.contact && <span className="text-red-500">{errors.contact.message}</span>}
+                </div>
+              </div>
+
+              <div className="mb-8">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Дополнительные комментарии
+                </label>
+                <textarea
+                  {...register('comments')}
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  rows={4}
+                  placeholder="Укажите дополнительные пожелания"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Контактный телефон
-                </label>
+              <div className="mb-6 flex items-center">
                 <input
-                  type="tel"
-                  value={formData.contact}
-                  onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  placeholder="+7 (___) ___-__-__"
+                  type="checkbox"
+                  id="consent"
+                  checked={consent}
+                  onChange={() => setConsent(!consent)} 
+                  className="mr-2"
                 />
+                <label htmlFor="consent" className="text-sm text-gray-700">
+                  Я согласен с условиями
+                </label>
               </div>
-            </div>
-
-            <div className="mb-8">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Дополнительные комментарии
-              </label>
-              <textarea
-                value={formData.comments}
-                onChange={(e) => setFormData({ ...formData, comments: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                rows={4}
-                placeholder="Укажите дополнительные пожелания"
-              />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <button
-                onClick={() => handleSubmit('whatsapp')}
-                className="flex items-center justify-center gap-2 bg-[#25D366] text-white px-6 py-3 rounded-lg hover:bg-[#128C7E] transition-colors"
-              >
-                <MessageCircle size={20} />
-                Отправить в WhatsApp
-              </button>
-              <button
-                onClick={() => handleSubmit('telegram')}
-                className="flex items-center justify-center gap-2 bg-[#0088cc] text-white px-6 py-3 rounded-lg hover:bg-[#0077b5] transition-colors"
-              >
-                <Send size={20} />
-                Отправить в Telegram
-              </button>
-            </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <button
+                  type="submit"
+                  disabled={isSubmitting} 
+                  className={`flex items-center justify-center gap-2 ${isSubmitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#25D366] hover:bg-[#128C7E]'} text-white px-6 py-3 rounded-lg transition-colors`}
+                >
+                  <MessageCircle size={20} />
+                  {isSubmitting ? 'Отправка...' : 'Отправить в WhatsApp'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onSubmit({} as FlightFormData)}
+                  className="flex items-center justify-center gap-2 bg-[#0088cc] text-white px-6 py-3 rounded-lg hover:bg-[#0077b5] transition-colors"
+                >
+                  <Send size={20} />
+                  Отправить в Telegram
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>

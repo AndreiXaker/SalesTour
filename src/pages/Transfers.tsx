@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { button } from 'telegraf/markup';
 
 
 
@@ -29,9 +30,12 @@ const Transfers = () => {
         pap: '67818469a10db',
         pap_bid: '30328da0'
       },
-      scroll_offset: 0
+      scroll_offset: 0,
+      button_background:"#239a54"
+  
     });
-
+    
+    console.log("Widget config:", configScript);
     // Create widget container
     const widgetContainer = document.createElement('div');
     widgetContainer.setAttribute('data-kiwitaxi-white-label', '');
