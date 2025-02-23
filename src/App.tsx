@@ -12,6 +12,7 @@ import Trips from './pages/Trips';
 import Cruises from './pages/Cruises';
 import RailwayTours from './pages/RailwayTours';
 import './i18n';
+// import TinkoffPayment from './components/Tink';
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
           <Route path="/cruises" element={<Cruises />} />
           <Route path="/railway-tours" element={<RailwayTours />} />
         </Routes>
+        {/* <TinkoffPayment /> */}
       </div>
     </Router>
   );

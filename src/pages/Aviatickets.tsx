@@ -13,6 +13,7 @@ interface FlightFormData {
   name: string;
   contact: string;
   comments: string;
+  consent: boolean;
 }
 
 const Aviatickets = () => {
@@ -21,6 +22,7 @@ const Aviatickets = () => {
   const [statusMessage, setStatusMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false); // Новое состояние для контроля кнопки
   const [consent, setConsent] = useState(false);
+  const [statusType, setStatusType] = useState<'success' | 'error'>('success');
 
   const onSubmit = async (data: FlightFormData) => {
     if (isSubmitting) return; // Если запрос уже выполняется, выходим
@@ -45,9 +47,11 @@ const Aviatickets = () => {
       const response = await axios.post('https://master-turov.ru:8443/users/api/v1/request-ticket/', jsonPayload);
       console.log('Response:', response.data);
       setStatusMessage('Запрос успешно отправлен!');
+      setStatusType('success');
     } catch (error) {
       console.error('Error:', error);
       setStatusMessage('Произошла ошибка при отправке запроса.');
+      setStatusType('error');
     } finally {
       setTimeout(() => {
         setIsSubmitting(false); // Включаем кнопку снова через 5 секунд
@@ -67,7 +71,7 @@ const Aviatickets = () => {
             </h1>
           </div>
           {statusMessage && (
-            <div className="mb-4 text-center text-lg text-green-600">
+            <div className={`mb-4 text-center text-lg ${statusType === 'success' ? 'text-green-600' : 'text-red-600'}`}>
               {statusMessage}
             </div>
           )}
@@ -166,8 +170,9 @@ const Aviatickets = () => {
 
               <div className="mb-8">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Дополнительные комментарии
+                  Дополнительные комментарии 
                 </label>
+                
                 <textarea
                   {...register('comments')}
                   className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
@@ -175,18 +180,30 @@ const Aviatickets = () => {
                   placeholder="Укажите дополнительные пожелания"
                 />
               </div>
-              <div className="mb-6 flex items-center">
-                <input
-                  type="checkbox"
-                  id="consent"
-                  checked={consent}
-                  onChange={() => setConsent(!consent)} 
-                  className="mr-2"
-                />
-                <label htmlFor="consent" className="text-sm text-gray-700">
-                  Я согласен с условиями
-                </label>
-              </div>
+              <div className="mb-6">
+        <div className="flex items-center">
+          <input
+            type="checkbox"
+            id="consent"
+            {...register('consent', { required: 'Необходимо согласие на обработку данных' })} // Регистрация поля consent
+            checked={consent}
+            onChange={() => {
+              setConsent(!consent);
+            }}
+            className={`mr-2 h-5 w-5 ${
+              errors.consent ? "border-red-500" : "border-gray-300"
+            }`}
+          />
+          <label htmlFor="consent" className="text-sm text-gray-700">
+            Я согласен с условиями отправки персональных данных
+          </label>
+        </div>
+        {errors.consent && (
+          <span className="text-red-500 text-sm mt-1">
+            {errors.consent.message}
+          </span>
+        )}
+      </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <button
                   type="submit"
