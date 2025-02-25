@@ -25,7 +25,7 @@ const Tours = () => {
       <h1 className="text-3xl font-bold text-primary-600 text-center mb-8">
           {t('nav.tours')}
         </h1>
-        <div className="tv-search-form tv-moduleid-9969284" />
+        <div className="tv-search-form tv-moduleid-9969640" />
       </div>
     </div>
   );
