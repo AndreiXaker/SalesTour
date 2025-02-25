@@ -1,12 +1,13 @@
 
 import { useTranslation } from 'react-i18next';
 import { Phone, User } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import SocialLinks from './SocialLinks';
 import LanguageSwitch from './LanguageSwitch';
 
 const Header = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   return (
     <header>
@@ -51,10 +52,13 @@ const Header = () => {
             </div>
 
             {/* Login Button */}
-            <button className="flex items-center gap-2 bg-primary-500 text-white px-6 py-2.5 rounded-lg hover:bg-primary-600 transition-colors">
-              <User size={20} />
-              <span className="hidden sm:inline">{t('header.login')}</span>
-            </button>
+            <button
+          onClick={() => navigate("/profile")}
+          className="flex items-center gap-2 bg-primary-500 text-white px-6 py-2.5 rounded-lg hover:bg-primary-600 transition-colors"
+        >
+          <User size={20} />
+          <span className="hidden sm:inline">{t("header.login")}</span>
+          </button>
           </div>
         </div>
       </div>

@@ -50,12 +50,12 @@ const Aviatickets = () => {
       setStatusType('success');
     } catch (error) {
       console.error('Error:', error);
-      setStatusMessage('Произошла ошибка при отправке запроса.');
+      setStatusMessage('Произошла ошибка при отправке запроса. Проверьте правильность введенных данных');
       setStatusType('error');
     } finally {
       setTimeout(() => {
-        setIsSubmitting(false); // Включаем кнопку снова через 5 секунд
-        setStatusMessage(''); // Сбрасываем сообщение
+        setIsSubmitting(false); 
+        setStatusMessage(''); 
       }, 5000);
     }
   };
@@ -214,13 +214,15 @@ const Aviatickets = () => {
                   {isSubmitting ? 'Отправка...' : 'Отправить в WhatsApp'}
                 </button>
                 <button
-                  type="button"
-                  onClick={() => onSubmit({} as FlightFormData)}
-                  className="flex items-center justify-center gap-2 bg-[#0088cc] text-white px-6 py-3 rounded-lg hover:bg-[#0077b5] transition-colors"
-                >
-                  <Send size={20} />
-                  Отправить в Telegram
-                </button>
+                type="submit"
+                disabled={isSubmitting}
+                className={`flex items-center justify-center gap-2 ${
+                  isSubmitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#0088cc] hover:bg-[#0077b5]'
+                } text-white px-6 py-3 rounded-lg transition-colors`}
+              >
+                <Send size={20} />
+                {isSubmitting ? 'Отправка...' : 'Отправить в Telegram'}
+              </button>
               </div>
             </form>
           </div>

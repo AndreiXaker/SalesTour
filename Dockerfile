@@ -29,7 +29,7 @@ COPY --from=build /app/dist /usr/share/nginx/html
 
 
 # Копируем конфигурационный файл nginx
-COPY --from=build /app/nginx/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/nginx/nginx.conf /etc/nginx/nginx.conf
 
 # Экспонируем порты для HTTP и HTTPS
 EXPOSE 80

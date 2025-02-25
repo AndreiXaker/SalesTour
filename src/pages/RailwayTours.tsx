@@ -11,6 +11,7 @@ interface FlightFormData {
   returnDate: string;
   passengers: string;
   name: string;
+  carriage_class : string;
   contact: string;
   comments: string;
   consent: boolean;
@@ -37,6 +38,7 @@ const RailWayTours = () => {
       destination_city: data.to,
       departure_date: data.departDate,
       return_date: data.returnDate,
+      carriage_class: data.carriage_class,
       passengers_count: Number(data.passengers),
       transport_type: "train", 
       comment: data.comments,
@@ -50,7 +52,7 @@ const RailWayTours = () => {
       setStatusType('success');
     } catch (error) {
       console.error('Error:', error);
-      setStatusMessage('Произошла ошибка при отправке запроса.');
+      setStatusMessage('Произошла ошибка при отправке запроса. Проверьте правильность введенных данных');
       setStatusType('error');
     } finally {
       setTimeout(() => {
@@ -142,6 +144,21 @@ const RailWayTours = () => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                              <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Класс вагона
+                  </label>
+                  <select
+                    {...register('carriage_class', { required: 'Выберите класс вагона' })}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  >
+                    <option value="плацкарт">Плацкарт</option>
+                    <option value="купе">Купе</option>
+                    <option value="св">СВ</option>
+                    <option value="люкс">Люкс</option>
+                  </select>
+                  {errors.carriage_class && <span className="text-red-500">{errors.carriage_class.message}</span>}
+                </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Ваше имя
@@ -213,13 +230,15 @@ const RailWayTours = () => {
                   {isSubmitting ? 'Отправка...' : 'Отправить в WhatsApp'}
                 </button>
                 <button
-                  type="button"
-                  onClick={() => onSubmit({} as FlightFormData)}
-                  className="flex items-center justify-center gap-2 bg-[#0088cc] text-white px-6 py-3 rounded-lg hover:bg-[#0077b5] transition-colors"
-                >
-                  <Send size={20} />
-                  Отправить в Telegram
-                </button>
+                type="submit"
+                disabled={isSubmitting}
+                className={`flex items-center justify-center gap-2 ${
+                  isSubmitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#0088cc] hover:bg-[#0077b5]'
+                } text-white px-6 py-3 rounded-lg transition-colors`}
+              >
+                <Send size={20} />
+                {isSubmitting ? 'Отправка...' : 'Отправить в Telegram'}
+              </button>
               </div>
             </form>
           </div>
