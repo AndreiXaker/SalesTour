@@ -53,7 +53,7 @@ const Header = () => {
 
             {/* Login Button */}
             <button
-          onClick={() => navigate("/profile")}
+          onClick={() => navigate("/login")}
           className="flex items-center gap-2 bg-primary-500 text-white px-6 py-2.5 rounded-lg hover:bg-primary-600 transition-colors"
         >
           <User size={20} />
