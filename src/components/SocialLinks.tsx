@@ -2,8 +2,8 @@ import { Instagram, Facebook, MessageCircle, Send } from 'lucide-react';
 
 const SocialLinks = () => {
   const socialLinks = [
-    { icon: <Instagram size={16} />, url: 'https://instagram.com/mt_tours', label: 'Instagram' },
-    { icon: <Facebook size={16} />, url: '#', label: 'Facebook' },
+    { icon: <Instagram size={16} />, url: 'https://www.instagram.com/mt_tours', label: 'Instagram' },
+    { icon: <Facebook size={16} />, url: 'https://www.facebook.com/profile.php?id=100092212643433', label: 'Facebook' },
     { 
       icon: (
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -11,7 +11,7 @@ const SocialLinks = () => {
           <path d="M8 19h8"/>
         </svg>
       ), 
-      url: '#', 
+      url: 'https://vk.com/mt_travel_agency', 
       label: 'VKontakte' 
     },
     { 
@@ -22,11 +22,11 @@ const SocialLinks = () => {
           <path d="M12 7.5v9"/>
         </svg>
       ), 
-      url: '#', 
+      url: 'https://ok.ru/profile/910045750041', 
       label: 'Odnoklassniki' 
     },
-    { icon: <MessageCircle size={16} />, url: '#', label: 'WhatsApp' },
-    { icon: <Send size={16} />, url: 'https://t.me/mt_travel', label: 'Telegram' }
+    { icon: <MessageCircle size={16} />, url: 'https://wa.me/+79339191515', label: 'WhatsApp' },
+    { icon: <Send size={16} />, url: 'https://t.me/mt_tours', label: 'Telegram' }
   ];
 
   return (

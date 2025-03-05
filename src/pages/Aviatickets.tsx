@@ -80,7 +80,7 @@ const Aviatickets = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Откуда
+                  {t('sections.from')}
                   </label>
                   <input
                     type="text"
@@ -92,7 +92,7 @@ const Aviatickets = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Куда
+                  {t('sections.to')}
                   </label>
                   <input
                     type="text"
@@ -104,7 +104,7 @@ const Aviatickets = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Дата вылета
+                  {t('sections.departureDate')}
                   </label>
                   <input
                     type="date"
@@ -115,7 +115,7 @@ const Aviatickets = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Дата возврата
+                  {t('sections.returnDate')}
                   </label>
                   <input
                     type="date"
@@ -127,7 +127,7 @@ const Aviatickets = () => {
 
               <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Количество пассажиров
+                {t('sections.numberOfPassengers')}
                 </label>
                 <select
                   {...register('passengers')}
@@ -144,7 +144,7 @@ const Aviatickets = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Ваше имя
+                  {t('sections.name')}
                   </label>
                   <input
                     type="text"
@@ -156,7 +156,7 @@ const Aviatickets = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Контактный телефон
+                  {t('header.phone')}
                   </label>
                   <input
                     type="tel"
@@ -170,7 +170,7 @@ const Aviatickets = () => {
 
               <div className="mb-8">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Дополнительные комментарии 
+                {t('sections.additionalComments')}
                 </label>
                 
                 <textarea
@@ -195,7 +195,7 @@ const Aviatickets = () => {
             }`}
           />
           <label htmlFor="consent" className="text-sm text-gray-700">
-            Я согласен с условиями отправки персональных данных
+          {t('sections.agree')}
           </label>
         </div>
         {errors.consent && (
