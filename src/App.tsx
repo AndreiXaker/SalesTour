@@ -14,8 +14,9 @@ import RailwayTours from './pages/RailwayTours';
 import './i18n';
 import LoginPage from './pages/LoginPage';
 import RegistrationPage from './pages/Register';
-// import ProfilePage from './pages/Profile';
-// import TinkoffPayment from './components/Tink';
+import ProfilePage from './pages/Profile';
+import CookieConsent from './components/Cookie';
+
 
 function App() {
   return (
@@ -40,8 +41,10 @@ function App() {
           <Route path="/railway-tours" element={<RailwayTours />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegistrationPage />} />
+          <Route path='/profile' element={<ProfilePage />} />
         </Routes>
         {/* <TinkoffPayment /> */}
+        <CookieConsent />
       </div>
     </Router>
   );
