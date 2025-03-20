@@ -214,7 +214,7 @@ const RailWayTours = () => {
           <label htmlFor="privacyPolicy" className="ml-3 text-sm text-gray-700">
                   {t("sections.agree")}{" "}
                   <a
-                    href="/public/Confident.pdf"
+                    href="/Confident.pdf"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-600 underline"
