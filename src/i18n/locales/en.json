@@ -18,6 +18,7 @@
   },
   "sections": {
     "privacyPolicy": "Privacy Policy",
+    "privacyPersonal" : "Privacy Policy for Personal Data Processing",
     "whyUs": "Why Choose Us",
     "whyUsReasons": {
       "experience": "15+ Years of Experience",

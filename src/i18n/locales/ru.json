@@ -18,6 +18,7 @@
   },
   "sections": {
     "privacyPolicy" : "Политика конфиденциальности",
+    "privacyPersonal" : "Согласие обработки персональных данных",
     "whyUs": "Почему мы",
     "whyUsReasons": {
       "experience": "15+ лет опыта",

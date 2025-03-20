@@ -198,12 +198,12 @@ const Aviatickets = () => {
           <label htmlFor="privacyPolicy" className="ml-3 text-sm text-gray-700">
                   {t("sections.agree")}{" "}
                   <a
-                    href="/Confident.pdf"
+                    href="/Personal.pdf"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-600 underline"
                   >
-                    {t("sections.privacyPolicy")}
+                    {t("sections.privacyPersonal")}
                   </a>
                 </label>
         </div>
