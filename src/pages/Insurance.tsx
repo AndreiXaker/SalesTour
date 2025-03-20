@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import CookieConsent from '../components/Cookie';
 
 
 const Insurance = () => {
@@ -60,6 +61,7 @@ const Insurance = () => {
           <div id="cherehapa-widget" className="min-h-[600px]" />
         </div>
       </div>
+      <CookieConsent />
     </div>
   );
 };

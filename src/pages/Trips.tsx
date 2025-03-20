@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Map } from 'lucide-react';
+import CookieConsent from '../components/Cookie';
 
 const Trips = () => {
   const { t } = useTranslation();
@@ -55,6 +56,7 @@ const Trips = () => {
           </div>
         </div>
       </div>
+      <CookieConsent />
     </div>
   );
 };

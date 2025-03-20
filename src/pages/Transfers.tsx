@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { button } from 'telegraf/markup';
+import CookieConsent from '../components/Cookie';
 
 
 
@@ -76,6 +76,7 @@ const Transfers = () => {
           <div id="kiwitaxi-container" />
         </div>
       </div>
+      <CookieConsent />
     </div>
   );
 };

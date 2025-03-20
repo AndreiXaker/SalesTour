@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom"; // Импортируем Link для навигации
+import CookieConsent from "../components/Cookie";
 
 const RegistrationPage = () => {
   const [formData, setFormData] = useState({
@@ -91,6 +92,7 @@ const RegistrationPage = () => {
           </Link>
         </p>
       </div>
+      <CookieConsent />
     </div>
   );
 };

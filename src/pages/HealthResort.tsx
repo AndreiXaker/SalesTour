@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Heart } from 'lucide-react';
+import CookieConsent from '../components/Cookie';
 
 declare global {
   interface Window {
@@ -54,6 +55,7 @@ const HealthResort = () => {
           <div id="sanatorium-search-module" className="min-h-[600px]" />
         </div>
       </div>
+      <CookieConsent />
     </div>
   );
 };

@@ -3,6 +3,7 @@ import { Plane, Send, MessageCircle } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useState } from 'react';
+import CookieConsent from '../components/Cookie';
 
 interface FlightFormData {
   from: string;
@@ -228,6 +229,7 @@ const Aviatickets = () => {
           </div>
         </div>
       </div>
+      <CookieConsent />
     </div>
   );
 };

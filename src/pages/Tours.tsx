@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import CookieConsent from '../components/Cookie';
 const Tours = () => {
   const {t} = useTranslation();
   useEffect(() => {
@@ -27,6 +28,7 @@ const Tours = () => {
         </h1>
         <div className="tv-search-form tv-moduleid-9969640" />
       </div>
+      <CookieConsent />
     </div>
   );
 };

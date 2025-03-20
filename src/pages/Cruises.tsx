@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Ship } from 'lucide-react';
+import CookieConsent from '../components/Cookie';
 
 declare global {
   interface Window {
@@ -69,6 +70,7 @@ const Cruises = () => {
           <div id="infoflot-widget" className="min-h-[600px]" />
         </div>
       </div>
+      <CookieConsent />
     </div>
   );
 };

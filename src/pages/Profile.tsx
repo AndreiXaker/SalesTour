@@ -1,4 +1,5 @@
 import { useState } from "react";
+import CookieConsent from "../components/Cookie";
 
 const ProfilePage = () => {
   const [phone, setPhone] = useState("");
@@ -114,6 +115,7 @@ const ProfilePage = () => {
           </ul>
         </div>
       </div>
+      <CookieConsent />
       </div>
   );
 };

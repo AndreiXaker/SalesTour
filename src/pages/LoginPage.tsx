@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom"; 
+import CookieConsent from "../components/Cookie";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -62,6 +63,7 @@ const LoginPage = () => {
           </Link>
         </p>
       </div>
+      <CookieConsent />
     </div>
   );
 };
