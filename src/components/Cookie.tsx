@@ -18,11 +18,11 @@ const CookieConsent = () => {
   return (
     isVisible && (
       <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 w-11/12 sm:w-1/2 p-6 bg-white shadow-xl rounded-lg border border-gray-300 z-50">
-        <h2 className="text-xl font-semibold mb-4">Согласие на использование Cookies</h2>
+        <h2 className="text-xl font-semibold mb-4">СОГЛАСИЕ НА ИСПОЛЬЗОВАНИЕ COOKIES-ФАЙЛОВ</h2>
         <p className="text-sm text-gray-800">
           Мы используем cookies для улучшения вашего опыта на сайте. Продолжая использовать наш сайт, вы соглашаетесь на использование cookies в соответствии с нашей 
           <a href="/public/Confident.pdf" className="text-blue-600 underline ml-1" target="_blank" rel="noopener noreferrer">Политикой конфиденциальности</a> и 
-          <a href="/public/Personal.pdf" className="text-blue-600 underline ml-1" target="_blank" rel="noopener noreferrer">Политикой обработки персональных данных</a>.
+          <a href="/public/Cookie.pdf" className="text-blue-600 underline ml-1" target="_blank" rel="noopener noreferrer">Согласие на использование cookies-файлов</a>.
         </p>
         <div className="mt-4">
           <button

@@ -1,9 +1,11 @@
 import { useTranslation } from 'react-i18next';
 import { Clock, MapPin, Users, Globe, Star, MessageSquare, Send } from 'lucide-react';
+import { useState } from 'react';
 
 const MainSections = () => {
   const { t } = useTranslation();
-
+  const [isChecked, setIsChecked] = useState(false);
+  
   const whyUsReasons = [
     { icon: <Clock size={32} />, key: 'experience' },
     { icon: <MessageSquare size={32} />, key: 'support' },
@@ -175,6 +177,26 @@ const MainSections = () => {
                     className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   />
                 </div>
+                <div className="flex items-start">
+                <input
+                  type="checkbox"
+                  id="privacyPolicy"
+                  checked={isChecked}
+                  onChange={() => setIsChecked(!isChecked)}
+                  className="w-5 h-5 text-primary-500 border-gray-300 rounded focus:ring-primary-500"
+                />
+                <label htmlFor="privacyPolicy" className="ml-3 text-sm text-gray-700">
+                  {t("sections.agree")}{" "}
+                  <a
+                    href="/public/Confident.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 underline"
+                  >
+                    {t("sections.privacyPolicy")}
+                  </a>
+                </label>
+              </div>
                 <button
                   type="submit"
                   className="w-full bg-primary-500 text-white py-3 px-6 rounded-lg hover:bg-primary-600 transition-colors flex items-center justify-center gap-2"

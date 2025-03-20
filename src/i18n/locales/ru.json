@@ -17,6 +17,7 @@
     "placeholder": "Куда хотите поехать?"
   },
   "sections": {
+    "privacyPolicy" : "Политика конфиденциальности",
     "whyUs": "Почему мы",
     "whyUsReasons": {
       "experience": "15+ лет опыта",

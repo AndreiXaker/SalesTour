@@ -45,6 +45,13 @@ function App() {
         </Routes>
         {/* <TinkoffPayment /> */}
         <CookieConsent />
+        <footer className="bg-green-600 text-white p-4">
+          <div className="container mx-auto flex space-x-10 justify-center">
+            <p><a href="/public/Confident.pdf" className="text-white underline ml-1" target="_blank" rel="noopener noreferrer">Политика конфиденциальности</a></p>
+            <p><a href="/public/Personal.pdf" className="text-white underline ml-1" target="_blank" rel="noopener noreferrer">Положение обработки персональных данных</a></p>
+          </div>
+          </footer>
+          
       </div>
     </Router>
   );

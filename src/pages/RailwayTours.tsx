@@ -211,9 +211,17 @@ const RailWayTours = () => {
               errors.consent ? "border-red-500" : "border-gray-300"
             }`}
           />
-          <label htmlFor="consent" className="text-sm text-gray-700">
-            Я согласен с условиями отправки персональных данных
-          </label>
+          <label htmlFor="privacyPolicy" className="ml-3 text-sm text-gray-700">
+                  {t("sections.agree")}{" "}
+                  <a
+                    href="/public/Confident.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 underline"
+                  >
+                    {t("sections.privacyPolicy")}
+                  </a>
+                </label>
         </div>
         {errors.consent && (
           <span className="text-red-500 text-sm mt-1">

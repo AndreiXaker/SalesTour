@@ -17,6 +17,7 @@
     "placeholder": "Where do you want to go?"
   },
   "sections": {
+    "privacyPolicy": "Privacy Policy",
     "whyUs": "Why Choose Us",
     "whyUsReasons": {
       "experience": "15+ Years of Experience",
