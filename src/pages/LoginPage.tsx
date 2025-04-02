@@ -1,22 +1,45 @@
-import { useState } from "react";
-import { Link } from "react-router-dom"; 
+import { useEffect, useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom"; 
 import CookieConsent from "../components/Cookie";
+import { activateUser, loginUser } from "../api/api";
+import useAuthStore from "../store/authStore";
 
 const LoginPage = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const { setAuth, isAuthenticated } = useAuthStore();
+
+  useEffect(() => {
+    const uid = searchParams.get("uid");
+    const token = searchParams.get("token");
+    if (uid && token) {
+      activateUser(uid, token);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    
+    if (isAuthenticated) {
+      navigate("/profile");
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
-    console.log("Login data submitted:", formData);
-    // Здесь добавьте логику для аутентификации пользователя
+    try {
+      const data = await loginUser(formData);
+      setAuth(data.access); 
+      localStorage.setItem("refresh", data.refresh);
+      navigate("/profile");
+    } catch (error) {
+      console.error("Ошибка входа:", error);
+      alert("Ошибка входа. Проверьте email и пароль.");
+    }
   };
 
   return (

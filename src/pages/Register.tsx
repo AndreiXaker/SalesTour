@@ -1,6 +1,7 @@
-import { useState } from "react";
-import { Link } from "react-router-dom"; // Импортируем Link для навигации
+import { Link } from "react-router-dom";
 import CookieConsent from "../components/Cookie";
+import { registerUser } from "../api/api";
+import { useState } from "react";
 
 const RegistrationPage = () => {
   const [formData, setFormData] = useState({
@@ -12,34 +13,39 @@ const RegistrationPage = () => {
   });
 
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setErrorMessage("");
+    setSuccessMessage("");
 
-    // Простейшая валидация пароля
     if (formData.password !== formData.confirmPassword) {
       setErrorMessage("Пароли не совпадают.");
       return;
     }
 
-    // Здесь добавьте логику для регистрации пользователя (например, отправка на сервер)
-    console.log("Registration data submitted:", formData);
-    setErrorMessage(""); // Сбросить сообщение об ошибке при успешной отправке
+    try {
+      await registerUser({
+        email: formData.email,
+        password: formData.password,
+      });
+      setSuccessMessage("Письмо с подтверждением отправлено вам на почту.");
+    } catch (error) {
+      setErrorMessage("Ошибка:" + error);
+    }
   };
 
   return (
     <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg mt-10">
       <h2 className="text-2xl font-semibold text-gray-800 mb-4">Регистрация</h2>
-      {errorMessage && (
-        <p className="text-red-500 mb-4">{errorMessage}</p>
-      )}
+      {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
+      {successMessage && <p className="text-green-500 mb-4">{successMessage}</p>}
       <form onSubmit={handleSubmit}>
-        
-
         <div className="mb-4">
           <label className="block text-gray-600">Email</label>
           <input
@@ -86,7 +92,7 @@ const RegistrationPage = () => {
 
       <div className="mt-4 text-center">
         <p className="text-gray-600">
-          У вас уже есть аккаунт?{" "}
+          У вас уже есть аккаунт? {" "}
           <Link to="/login" className="text-blue-500 underline">
             Войти
           </Link>

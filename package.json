@@ -21,7 +21,8 @@
     "react-i18next": "^14.1.0",
     "react-router-dom": "^6.22.3",
     "react-tinkoff-pay": "^2.8.7",
-    "uuid": "^11.1.0"
+    "uuid": "^11.1.0",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",

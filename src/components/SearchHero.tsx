@@ -22,7 +22,7 @@ const SearchHero = () => {
       <div className="absolute inset-0 bg-primary-900 bg-opacity-40" />
 
       <div className="relative z-10 w-full max-w-4xl mx-auto px-4">
-        <div className="bg-white rounded-xl shadow-xl overflow-hidden p-4">
+        <div className="bg-white rounded-xl shadow-xl overflow-hidden">
           <div className="tv-search-form tv-moduleid-9969960"></div>
         </div>
       </div>
