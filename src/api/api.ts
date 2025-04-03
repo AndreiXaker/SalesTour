@@ -6,37 +6,52 @@ interface IUser {
     password : string
 }
 
+interface IUserInfo {
+  first_name: string,
+  last_name: string,
+  phone_number: string,
+  gender: string,
+  passport_number: string,
+  date_of_birth: string,
+  citizenship: string,
+  international_passport_number: string
+}
+
+const userApi = axios.create({
+    baseURL : "https://master-turov.ru:8443/users/api/v1"
+});
+
 const apiClient = axios.create({
     baseURL: "https://master-turov.ru:8443/users/api/v1/auth",
   });
   
-  apiClient.interceptors.request.use(
-    (config) => {
-      const { accessToken } = useAuthStore.getState();
-      if (accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken}`;
-      }
-      return config;
-    },
-    (error) => Promise.reject(error)
-  );
+const setAuthHeader = (config: any) => {
+  const { accessToken } = useAuthStore.getState();
+  if (accessToken) {
+    config.headers.Authorization = `Bearer ${accessToken}`;
+  }
+  return config;
+};
   
-  apiClient.interceptors.response.use(
-    (response) => response,
-    async (error) => {
-      const originalRequest = error.config;
-      if (error.response?.status === 401 && !originalRequest._retry) {
-        originalRequest._retry = true; 
-        await refreshToken(); 
-        const newAccessToken = localStorage.getItem("access"); 
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-        return apiClient(originalRequest); 
-      }
-      return Promise.reject(error);
-    }
-  );
+apiClient.interceptors.request.use(setAuthHeader, (error) => Promise.reject(error));
+userApi.interceptors.request.use(setAuthHeader, (error) => Promise.reject(error));
   
-  export default apiClient;
+const handleResponseError = async (error: any) => {
+  const originalRequest = error.config;
+  if (error.response?.status === 401 && !originalRequest._retry) {
+    originalRequest._retry = true; 
+    await refreshToken(); 
+    const newAccessToken = localStorage.getItem("access"); 
+    originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+    return axios(originalRequest); 
+  }
+  return Promise.reject(error);
+};
+  
+apiClient.interceptors.response.use((response) => response, handleResponseError);
+userApi.interceptors.response.use((response) => response, handleResponseError);
+  
+export default apiClient;
 
 export const refreshToken = async () => {
     try {
@@ -52,7 +67,6 @@ export const refreshToken = async () => {
     }
   };
     
-
 export const registerUser = async (user : IUser) => {
     try {
         const response = await apiClient.post("/users/", user);
@@ -74,8 +88,33 @@ export const activateUser = async (uid : string, token : string) => {
 export const loginUser = async (user : IUser) => {
     try {
         const response = await apiClient.post("/jwt/create/", user);
-            return response.data;   
+        const {access, email } = response.data;
+
+        useAuthStore.getState().setAuth(access,email);
+        return response.data;   
         } catch (error) {
             throw new Error ("Ошибка авторизации пользователя" + error);
         }
+}
+
+export const orders = async () => {
+    try {
+        const response = await userApi.get("/my-orders/");
+        return response.data;
+    } catch (error) {
+        throw new Error("Ошибка при получении списка заказов" + error);
+    }
+}
+
+export const putUserInfo = async (userInfo : IUserInfo) => {
+  try {
+        const response = await userApi.put("/update/", userInfo,{
+          headers : {
+            "Content-Type" : "application/json"
+          }
+        });
+        return response.data;
+    } catch (error) {
+      throw new Error("Ошибка при обновлении информации о пользователе" + error);
+    }
 }

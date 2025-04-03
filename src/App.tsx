@@ -19,6 +19,8 @@ import CookieConsent from './components/Cookie';
 import useAuthStore from './store/authStore';
 import { useEffect } from 'react';
 import { refreshToken } from './api/api';
+import { Orders } from './pages/Orders';
+import { Reserv } from './pages/Reserv';
 
 
 
@@ -56,6 +58,8 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegistrationPage />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path='/orders' element= {<Orders/>} />
+            <Route path='/reserv' element= {<Reserv/>} />
           </Routes>
         </div>
 
