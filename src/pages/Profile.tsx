@@ -1,44 +1,53 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import useAuthStore from "../store/authStore";  
+import { putUserInfo, getUserInfo } from "../api/api"; 
 import CookieConsent from "../components/Cookie";
-import { putUserInfo } from "../api/api";
-import { Link } from "react-router-dom";
+
 const ProfilePage = () => {
- 
-  const loadDataFromLocalStorage = () => {
-    const storedData = localStorage.getItem("userProfile");
-    return storedData ? JSON.parse(storedData) : {
-      first_name: "",
-      last_name: "",
-      phone_number: "",
-      gender: "M",
-      passport_number: "",
-      date_of_birth: "",
-      citizenship: "",
-      international_passport_number: "",
-    };
-  };
+  const { isAuthenticated } = useAuthStore();  
+  const [formData, setFormData] = useState({
+    first_name: "",
+    last_name: "",
+    phone_number: "",
+    gender: "M",
+    passport_number: "",
+    date_of_birth: "",
+    citizenship: "",
+    international_passport_number: "",
+  });
 
-  const [formData, setFormData] = useState(loadDataFromLocalStorage);
+  
+  useEffect(() => {
+    if (isAuthenticated) {
+      const fetchData = async () => {
+        try {
+          const data = await getUserInfo();  
+          setFormData(data);  
+        } catch (error) {
+          console.error("Ошибка при загрузке данных пользователя:", error);
+        }
+      };
+      fetchData();
+    }
+  }, [isAuthenticated]);
 
- 
-  const saveDataToLocalStorage = (data: typeof formData) => {
-    localStorage.setItem("userProfile", JSON.stringify(data));
-  };
-
- 
+  
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const updatedData = { ...formData, [event.target.name]: event.target.value };
     setFormData(updatedData);
-    saveDataToLocalStorage(updatedData);
   };
 
+  
   const handleSubmit = async () => {
-    try {
-      await putUserInfo(formData);
-      alert("Информация обновлена успешно");
-      saveDataToLocalStorage(formData); 
-    } catch (error) {
-      alert("Произошла ошибка при обновлении информации: " + error);
+    if (isAuthenticated) {
+      try {
+        await putUserInfo(formData);  
+        alert("Информация обновлена успешно");
+      } catch (error) {
+        alert("Произошла ошибка при обновлении информации: " + error);
+      }
+    } else {
+      alert("Вы не авторизованы.");
     }
   };
 
@@ -88,33 +97,11 @@ const ProfilePage = () => {
               <label className="block text-gray-700">Телефон:</label>
               <input type="tel" name="phone_number" value={formData.phone_number} onChange={handleChange} className="w-full border rounded-lg p-2" placeholder="+7 (___) ___-____" />
             </div>
-            <div className="col-span-2 flex items-center space-x-2">
-              <input type="checkbox" className="w-4 h-4" />
-              <label className="text-gray-700 text-sm">Подтвердить телефон</label>
-            </div>
-            <div className="col-span-2 flex space-x-2">
-              <input type="text" placeholder="Введите код из SMS" className="border rounded-lg p-2 flex-1" />
-              <button className="bg-yellow-500 text-white px-4 py-2 rounded-lg">Выслать код</button>
-            </div>
           </div>
 
           <div className="mt-6 flex space-x-4">
             <button onClick={handleSubmit} className="bg-yellow-500 text-white px-6 py-2 rounded-lg font-bold">Сохранить</button>
-            <button className="bg-gray-300 text-gray-700 px-6 py-2 rounded-lg font-bold">Отмена</button>
           </div>
-        </div>
-        <div className="bg-white shadow-lg rounded-lg p-4 h-max min-w-max">
-          <ul className="text-blue-500 space-y-6">
-            <li>
-              <a href="/orders" className="hover:underline">Ваши заказы</a>
-            </li>
-            <li>
-              <a href="/reserv" className="hover:underline">Ваши брони</a>
-            </li>
-            <Link to="/login" className="block text-red-500 hover:underline">
-            Выйти из аккаунта
-            </Link>
-          </ul>
         </div>
       </div>
       <CookieConsent />

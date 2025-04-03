@@ -68,7 +68,8 @@ export const refreshToken = async () => {
       useAuthStore.getState().setAuth(null);
     }
   };
-    
+
+  //Регистрация пользователя
 export const registerUser = async (user : IUser) => {
     try {
         const response = await apiClient.post("/users/", user);
@@ -77,7 +78,7 @@ export const registerUser = async (user : IUser) => {
         throw new Error ("Ошибка регистрации пользователя" + error);
     }
 }
-
+// Акивация пользователя
 export const activateUser = async (uid : string, token : string) => {
     try {
         const response = await apiClient.post("/users/activation/", {uid, token});
@@ -86,7 +87,7 @@ export const activateUser = async (uid : string, token : string) => {
             throw new Error ("Ошибка активации пользователя" + error);
         }
 }
-
+// Вход пользователя
 export const loginUser = async (user : IUser) => {
     try {
         const response = await apiClient.post("/jwt/create/", user);
@@ -98,6 +99,15 @@ export const loginUser = async (user : IUser) => {
             throw new Error ("Ошибка авторизации пользователя" + error);
         }
 }
+//Получение данных пользователя
+export const getUserInfo = async () => {
+  try {
+      const response = await userApi.get("/profile");  
+      return response.data;   
+  } catch (error) {
+      throw new Error("Ошибка при получении данных пользователя" + error);
+  }
+};
 
 export const usersOrders = async () => {
     try {

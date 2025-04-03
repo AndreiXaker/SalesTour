@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import CookieConsent from "../components/Cookie";
-import { activateUser, loginUser } from "../api/api";
+import { activateUser, loginUser, getUserInfo } from "../api/api";
 import useAuthStore from "../store/authStore";
 import { t } from "i18next";
 
@@ -9,7 +9,7 @@ export const LoginPage = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { setAuth } = useAuthStore();
+  const { setAuth } = useAuthStore(); // setAuth для обновления состояния
   const [isChecked, setIsChecked] = useState(false); 
 
   useEffect(() => {
@@ -20,7 +20,6 @@ export const LoginPage = () => {
     }
   }, [searchParams]);
 
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -29,11 +28,20 @@ export const LoginPage = () => {
     e.preventDefault();
     try {
       const data = await loginUser(formData);
+      
+      // Сохраняем токены в localStorage
       localStorage.removeItem("access");
       localStorage.removeItem("refresh");
       localStorage.setItem("access", data.access);
       localStorage.setItem("refresh", data.refresh);
-      setAuth(data.access);
+      
+      // Получаем информацию о пользователе
+      const userInfo = await getUserInfo();
+      
+      // Обновляем состояние с данными о пользователе и токеном
+      setAuth(data.access, userInfo); // передаем токен и данные пользователя
+      
+      // Переходим на страницу профиля
       navigate("/profile");
     } catch (error) {
       console.error("Ошибка входа:", error);
@@ -69,7 +77,6 @@ export const LoginPage = () => {
           />
         </div>
 
-        
         <div className="mb-4 flex items-center">
           <input
             type="checkbox"
@@ -96,8 +103,7 @@ export const LoginPage = () => {
           className={`w-full px-4 py-2 rounded-lg ${
             isChecked ? "bg-green-500 text-white" : "bg-gray-400 text-gray-700 cursor-not-allowed"
           }`}
-          disabled={!isChecked} 
-          
+          disabled={!isChecked}
         >
           Войти
         </button>

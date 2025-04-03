@@ -12,7 +12,7 @@ const RegistrationPage = () => {
     password: "",
     confirmPassword: "",
   });
-  const [isChecked, setIsChecked] = useState(false); // Чекбокс
+  const [isChecked, setIsChecked] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
