@@ -7,7 +7,7 @@ interface IUser {
 }
 
 const apiClient = axios.create({
-    baseURL: "https://master-turov.ru/users/api/v1/auth",
+    baseURL: "https://master-turov.ru:8443/users/api/v1/auth",
   });
   
   apiClient.interceptors.request.use(
