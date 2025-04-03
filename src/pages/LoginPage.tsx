@@ -9,7 +9,7 @@ export const LoginPage = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { setAuth, isAuthenticated } = useAuthStore();
+  const { setAuth } = useAuthStore();
   const [isChecked, setIsChecked] = useState(false); 
 
   useEffect(() => {
@@ -20,11 +20,6 @@ export const LoginPage = () => {
     }
   }, [searchParams]);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/profile");
-    }
-  }, [isAuthenticated, navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -101,7 +96,8 @@ export const LoginPage = () => {
           className={`w-full px-4 py-2 rounded-lg ${
             isChecked ? "bg-green-500 text-white" : "bg-gray-400 text-gray-700 cursor-not-allowed"
           }`}
-          disabled={!isChecked} // Блокируем кнопку, если чекбокс не отмечен
+          disabled={!isChecked} 
+          
         >
           Войти
         </button>
