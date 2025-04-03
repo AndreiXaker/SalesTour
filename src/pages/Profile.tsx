@@ -1,32 +1,45 @@
 import { useState } from "react";
 import CookieConsent from "../components/Cookie";
-import useAuthStore from "../store/authStore";
 import { putUserInfo } from "../api/api";
 
 const ProfilePage = () => {
-  const {user} = useAuthStore();
-  const [formData, setFormData] = useState({
-    first_name: "",
-    last_name: "",
-    phone_number: "",
-    gender: "M",
-    passport_number: "",
-    date_of_birth: "",
-    citizenship: "",
-    international_passport_number: "",
-  });
+ 
+  const loadDataFromLocalStorage = () => {
+    const storedData = localStorage.getItem("userProfile");
+    return storedData ? JSON.parse(storedData) : {
+      first_name: "",
+      last_name: "",
+      phone_number: "",
+      gender: "M",
+      passport_number: "",
+      date_of_birth: "",
+      citizenship: "",
+      international_passport_number: "",
+    };
+  };
+
+  const [formData, setFormData] = useState(loadDataFromLocalStorage);
+
+ 
+  const saveDataToLocalStorage = (data: typeof formData) => {
+    localStorage.setItem("userProfile", JSON.stringify(data));
+  };
+
+ 
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const updatedData = { ...formData, [event.target.name]: event.target.value };
+    setFormData(updatedData);
+    saveDataToLocalStorage(updatedData);
+  };
 
   const handleSubmit = async () => {
     try {
       await putUserInfo(formData);
       alert("Информация обновлена успешно");
+      saveDataToLocalStorage(formData); 
     } catch (error) {
       alert("Произошла ошибка при обновлении информации: " + error);
     }
-  };
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
   return (
@@ -51,10 +64,6 @@ const ProfilePage = () => {
             <div>
               <label className="block text-gray-700">Дата рождения:</label>
               <input type="date" name="date_of_birth" value={formData.date_of_birth} onChange={handleChange} className="w-full border rounded-lg p-2" />
-            </div>
-            <div>
-              <label className="block text-gray-700">Ваш e-mail:</label>
-              <input type="email" value={user?.email || ""} disabled className="w-full border bg-gray-100 rounded-lg p-2" />
             </div>
             <div>
               <label className="block text-gray-700">Пол:</label>

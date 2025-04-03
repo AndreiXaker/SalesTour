@@ -25,6 +25,7 @@ const apiClient = axios.create({
     baseURL: "https://master-turov.ru:8443/users/api/v1/auth",
   });
   
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const setAuthHeader = (config: any) => {
   const { accessToken } = useAuthStore.getState();
   if (accessToken) {
@@ -36,6 +37,7 @@ const setAuthHeader = (config: any) => {
 apiClient.interceptors.request.use(setAuthHeader, (error) => Promise.reject(error));
 userApi.interceptors.request.use(setAuthHeader, (error) => Promise.reject(error));
   
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleResponseError = async (error: any) => {
   const originalRequest = error.config;
   if (error.response?.status === 401 && !originalRequest._retry) {
