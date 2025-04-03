@@ -12,7 +12,6 @@ import Trips from './pages/Trips';
 import Cruises from './pages/Cruises';
 import RailwayTours from './pages/RailwayTours';
 import './i18n';
-import LoginPage from './pages/LoginPage';
 import RegistrationPage from './pages/Register';
 import ProfilePage from './pages/Profile';
 import CookieConsent from './components/Cookie';
@@ -21,6 +20,7 @@ import { useEffect } from 'react';
 import { refreshToken } from './api/api';
 import { Orders } from './pages/Orders';
 import { Reserv } from './pages/Reserv';
+import { LoginPage } from './pages/LoginPage';
 
 
 

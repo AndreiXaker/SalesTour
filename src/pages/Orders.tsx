@@ -31,21 +31,23 @@ export const Orders = () => {
   }
 
   return (
+    <div className="flex justify-center items-center min-h-screen">
     <div>
-      <div>
-        {orders.length > 0 ? (
-          orders.map((order) => (
-            <div key={order.id} className="order-item">
-              <h3>{order.category_display}</h3>
-              <p>{order.description}</p>
-              <p>Цена: {order.price}</p>
-              <p>Дата создания: {order.created_at}</p>
-            </div>
-          ))
-        ) : (
-          <p>Нет заказов, соответствующих выбранным категориям.</p>
-        )}
-      </div>
+      {orders.length > 0 ? (
+        orders.map((order) => (
+          <div key={order.id} className="order-item">
+            <h3>{order.category_display}</h3>
+            <p>{order.description}</p>
+            <p>Цена: {order.price}</p>
+            <p>Дата создания: {order.created_at}</p>
+          </div>
+        ))
+      ) : (
+        <p className="text-center text-gray-500 text-lg">
+          Нет заказов, соответствующих выбранным категориям.
+        </p>
+      )}
     </div>
-  );
+  </div>
+);
 };

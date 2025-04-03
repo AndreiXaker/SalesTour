@@ -33,7 +33,7 @@ export const Reserv = () => {
   }
 
   return (
-    <div>
+    <div className="flex justify-center items-center min-h-screen">
       <div>
         {orders.length > 0 ? (
           orders.map((order) => (
@@ -45,7 +45,9 @@ export const Reserv = () => {
             </div>
           ))
         ) : (
-          <p>Нет заказов, соответствующих выбранным категориям.</p>
+          <p className="text-center text-gray-500 text-lg">
+            Нет заказов, соответствующих выбранным категориям.
+          </p>
         )}
       </div>
     </div>

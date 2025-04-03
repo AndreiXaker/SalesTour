@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import CookieConsent from "../components/Cookie";
 import { registerUser } from "../api/api";
 import { useState } from "react";
+import { t } from "i18next";
 
 const RegistrationPage = () => {
   const [formData, setFormData] = useState({
@@ -11,11 +12,11 @@ const RegistrationPage = () => {
     password: "",
     confirmPassword: "",
   });
-
+  const [isChecked, setIsChecked] = useState(false); // Чекбокс
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false); // Для отслеживания состояния отправки
-  const [isSubmitted, setIsSubmitted] = useState(false); // Чтобы не отправить форму снова после успешной регистрации
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -26,12 +27,17 @@ const RegistrationPage = () => {
     setErrorMessage("");
     setSuccessMessage("");
 
+    if (!isChecked) {
+      setErrorMessage("Вы должны согласиться с политикой конфиденциальности.");
+      return;
+    }
+
     if (formData.password !== formData.confirmPassword) {
       setErrorMessage("Пароли не совпадают.");
       return;
     }
 
-    setIsSubmitting(true); // Включаем состояние отправки
+    setIsSubmitting(true);
 
     try {
       await registerUser({
@@ -39,16 +45,16 @@ const RegistrationPage = () => {
         password: formData.password,
       });
       setSuccessMessage("Письмо с подтверждением отправлено вам на почту.");
-      setIsSubmitted(true); // Устанавливаем, что регистрация завершена
+      setIsSubmitted(true);
     } catch (error) {
       setErrorMessage("Ошибка:" + error);
     } finally {
-      setIsSubmitting(false); // Завершаем состояние отправки
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg mt-10">
+    <div className="w-max mx-auto bg-white p-6 rounded-lg shadow-lg mt-10">
       <h2 className="text-2xl font-semibold text-gray-800 mb-4">Регистрация</h2>
       {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
       {successMessage && <p className="text-green-500 mb-4">{successMessage}</p>}
@@ -62,7 +68,7 @@ const RegistrationPage = () => {
             onChange={handleChange}
             required
             className="w-full px-4 py-2 border rounded-lg"
-            disabled={isSubmitted} 
+            disabled={isSubmitted}
           />
         </div>
 
@@ -75,7 +81,7 @@ const RegistrationPage = () => {
             onChange={handleChange}
             required
             className="w-full px-4 py-2 border rounded-lg"
-            disabled={isSubmitted} 
+            disabled={isSubmitted}
           />
         </div>
 
@@ -88,14 +94,40 @@ const RegistrationPage = () => {
             onChange={handleChange}
             required
             className="w-full px-4 py-2 border rounded-lg"
-            disabled={isSubmitted} 
+            disabled={isSubmitted}
           />
+        </div>
+
+        {/* Чекбокс для принятия политики конфиденциальности */}
+        <div className="mb-4 flex items-center">
+          <input
+            type="checkbox"
+            id="privacyPolicy"
+            checked={isChecked}
+            onChange={() => setIsChecked(!isChecked)}
+            className="mr-2"
+          />
+          <label htmlFor="privacyPolicy" className="text-sm text-gray-700">
+            {t("sections.agree")}{" "}
+            <a
+              href="/Personal.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 underline"
+            >
+              {t("sections.privacyPersonal")}
+            </a>
+          </label>
         </div>
 
         <button
           type="submit"
-          className={`w-full px-4 py-2 bg-green-500 text-white rounded-lg ${isSubmitting || isSubmitted ? "opacity-50 cursor-not-allowed" : ""}`}
-          disabled={isSubmitting || isSubmitted} 
+          className={`w-full px-4 py-2 rounded-lg ${
+            isChecked && !isSubmitting && !isSubmitted
+              ? "bg-green-500 text-white"
+              : "bg-gray-400 text-gray-700 cursor-not-allowed"
+          }`}
+          disabled={!isChecked || isSubmitting || isSubmitted}
         >
           {isSubmitting ? "Отправляется..." : isSubmitted ? "Зарегистрировано" : "Зарегистрироваться"}
         </button>

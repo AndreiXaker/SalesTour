@@ -1,14 +1,16 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom"; 
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import CookieConsent from "../components/Cookie";
 import { activateUser, loginUser } from "../api/api";
 import useAuthStore from "../store/authStore";
+import { t } from "i18next";
 
-const LoginPage = () => {
+export const LoginPage = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { setAuth } = useAuthStore();
+  const { setAuth, isAuthenticated } = useAuthStore();
+  const [isChecked, setIsChecked] = useState(false); 
 
   useEffect(() => {
     const uid = searchParams.get("uid");
@@ -18,6 +20,12 @@ const LoginPage = () => {
     }
   }, [searchParams]);
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/profile");
+    }
+  }, [isAuthenticated, navigate]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -26,9 +34,12 @@ const LoginPage = () => {
     e.preventDefault();
     try {
       const data = await loginUser(formData);
-      setAuth(data.access); 
-      localStorage.setItem("refresh", data.refresh); 
-      navigate("/profile"); 
+      localStorage.removeItem("access");
+      localStorage.removeItem("refresh");
+      localStorage.setItem("access", data.access);
+      localStorage.setItem("refresh", data.refresh);
+      setAuth(data.access);
+      navigate("/profile");
     } catch (error) {
       console.error("Ошибка входа:", error);
       alert("Ошибка входа. Проверьте email и пароль.");
@@ -36,7 +47,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg mt-10">
+    <div className="w-max mx-auto bg-white p-6 rounded-lg shadow-lg mt-10">
       <h2 className="text-2xl font-semibold text-gray-800 mb-4">Вход</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
@@ -63,9 +74,34 @@ const LoginPage = () => {
           />
         </div>
 
+        
+        <div className="mb-4 flex items-center">
+          <input
+            type="checkbox"
+            id="privacyPolicy"
+            checked={isChecked}
+            onChange={() => setIsChecked(!isChecked)}
+            className="mr-2"
+          />
+          <label htmlFor="privacyPolicy" className="text-sm text-gray-700">
+            {t("sections.agree")}{" "}
+            <a
+              href="/Personal.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 underline"
+            >
+              {t("sections.privacyPersonal")}
+            </a>
+          </label>
+        </div>
+
         <button
           type="submit"
-          className="w-full px-4 py-2 bg-green-500 text-white rounded-lg"
+          className={`w-full px-4 py-2 rounded-lg ${
+            isChecked ? "bg-green-500 text-white" : "bg-gray-400 text-gray-700 cursor-not-allowed"
+          }`}
+          disabled={!isChecked} // Блокируем кнопку, если чекбокс не отмечен
         >
           Войти
         </button>
@@ -83,5 +119,3 @@ const LoginPage = () => {
     </div>
   );
 };
-
-export default LoginPage;
