@@ -1,7 +1,7 @@
 import { useState } from "react";
 import CookieConsent from "../components/Cookie";
 import { putUserInfo } from "../api/api";
-
+import { Link } from "react-router-dom";
 const ProfilePage = () => {
  
   const loadDataFromLocalStorage = () => {
@@ -106,11 +106,14 @@ const ProfilePage = () => {
         <div className="bg-white shadow-lg rounded-lg p-4 h-max min-w-max">
           <ul className="text-blue-500 space-y-6">
             <li>
-              <a href="#" className="hover:underline">Ваши заказы</a>
+              <a href="/orders" className="hover:underline">Ваши заказы</a>
             </li>
             <li>
-              <a href="#" className="hover:underline">Ваши брони</a>
+              <a href="/reserv" className="hover:underline">Ваши брони</a>
             </li>
+            <Link to="/login" className="block text-red-500 hover:underline">
+            Выйти из аккаунта
+            </Link>
           </ul>
         </div>
       </div>

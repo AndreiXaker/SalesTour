@@ -8,7 +8,7 @@ const LoginPage = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { setAuth, isAuthenticated } = useAuthStore();
+  const { setAuth } = useAuthStore();
 
   useEffect(() => {
     const uid = searchParams.get("uid");
@@ -17,13 +17,6 @@ const LoginPage = () => {
       activateUser(uid, token);
     }
   }, [searchParams]);
-
-  useEffect(() => {
-    
-    if (isAuthenticated) {
-      navigate("/profile");
-    }
-  }, [isAuthenticated, navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -34,8 +27,8 @@ const LoginPage = () => {
     try {
       const data = await loginUser(formData);
       setAuth(data.access); 
-      localStorage.setItem("refresh", data.refresh);
-      navigate("/profile");
+      localStorage.setItem("refresh", data.refresh); 
+      navigate("/profile"); 
     } catch (error) {
       console.error("Ошибка входа:", error);
       alert("Ошибка входа. Проверьте email и пароль.");

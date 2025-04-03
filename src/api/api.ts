@@ -99,7 +99,7 @@ export const loginUser = async (user : IUser) => {
         }
 }
 
-export const orders = async () => {
+export const usersOrders = async () => {
     try {
         const response = await userApi.get("/my-orders/");
         return response.data;

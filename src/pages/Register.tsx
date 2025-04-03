@@ -14,6 +14,8 @@ const RegistrationPage = () => {
 
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false); // Для отслеживания состояния отправки
+  const [isSubmitted, setIsSubmitted] = useState(false); // Чтобы не отправить форму снова после успешной регистрации
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -29,14 +31,19 @@ const RegistrationPage = () => {
       return;
     }
 
+    setIsSubmitting(true); // Включаем состояние отправки
+
     try {
       await registerUser({
         email: formData.email,
         password: formData.password,
       });
       setSuccessMessage("Письмо с подтверждением отправлено вам на почту.");
+      setIsSubmitted(true); // Устанавливаем, что регистрация завершена
     } catch (error) {
       setErrorMessage("Ошибка:" + error);
+    } finally {
+      setIsSubmitting(false); // Завершаем состояние отправки
     }
   };
 
@@ -55,6 +62,7 @@ const RegistrationPage = () => {
             onChange={handleChange}
             required
             className="w-full px-4 py-2 border rounded-lg"
+            disabled={isSubmitted} 
           />
         </div>
 
@@ -67,6 +75,7 @@ const RegistrationPage = () => {
             onChange={handleChange}
             required
             className="w-full px-4 py-2 border rounded-lg"
+            disabled={isSubmitted} 
           />
         </div>
 
@@ -79,20 +88,22 @@ const RegistrationPage = () => {
             onChange={handleChange}
             required
             className="w-full px-4 py-2 border rounded-lg"
+            disabled={isSubmitted} 
           />
         </div>
 
         <button
           type="submit"
-          className="w-full px-4 py-2 bg-green-500 text-white rounded-lg"
+          className={`w-full px-4 py-2 bg-green-500 text-white rounded-lg ${isSubmitting || isSubmitted ? "opacity-50 cursor-not-allowed" : ""}`}
+          disabled={isSubmitting || isSubmitted} 
         >
-          Зарегистрироваться
+          {isSubmitting ? "Отправляется..." : isSubmitted ? "Зарегистрировано" : "Зарегистрироваться"}
         </button>
       </form>
 
       <div className="mt-4 text-center">
         <p className="text-gray-600">
-          У вас уже есть аккаунт? {" "}
+          У вас уже есть аккаунт?{" "}
           <Link to="/login" className="text-blue-500 underline">
             Войти
           </Link>
