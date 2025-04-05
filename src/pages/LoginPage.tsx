@@ -3,14 +3,12 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import CookieConsent from "../components/Cookie";
 import { activateUser, loginUser, getUserInfo } from "../api/api";
 import useAuthStore from "../store/authStore";
-import { t } from "i18next";
 
 export const LoginPage = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { setAuth } = useAuthStore();
-  const [isChecked, setIsChecked] = useState(false); 
 
   useEffect(() => {
     const uid = searchParams.get("uid");
@@ -28,15 +26,13 @@ export const LoginPage = () => {
     e.preventDefault();
     try {
       const data = await loginUser(formData);
-      
+
       localStorage.setItem("access", data.access);
       localStorage.setItem("refresh", data.refresh);
-      
-      
+
       const userInfo = await getUserInfo();
-      
-      setAuth(data.access, userInfo); 
-      
+      setAuth(data.access, userInfo);
+
       navigate("/profile");
     } catch (error) {
       console.error("Ошибка входа:", error);
@@ -45,7 +41,7 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="w-max mx-auto bg-white p-6 rounded-lg shadow-lg mt-10">
+    <div className="w-96 mx-auto bg-white p-6 rounded-lg shadow-lg mt-10">
       <h2 className="text-2xl font-semibold text-gray-800 mb-4">Вход</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
@@ -72,33 +68,9 @@ export const LoginPage = () => {
           />
         </div>
 
-        <div className="mb-4 flex items-center">
-          <input
-            type="checkbox"
-            id="privacyPolicy"
-            checked={isChecked}
-            onChange={() => setIsChecked(!isChecked)}
-            className="mr-2"
-          />
-          <label htmlFor="privacyPolicy" className="text-sm text-gray-700">
-            {t("sections.agree")}{" "}
-            <a
-              href="/Personal.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 underline"
-            >
-              {t("sections.privacyPersonal")}
-            </a>
-          </label>
-        </div>
-
         <button
           type="submit"
-          className={`w-full px-4 py-2 rounded-lg ${
-            isChecked ? "bg-green-500 text-white" : "bg-gray-400 text-gray-700 cursor-not-allowed"
-          }`}
-          disabled={!isChecked}
+          className="w-full px-4 py-2 rounded-lg bg-green-500 text-white"
         >
           Войти
         </button>

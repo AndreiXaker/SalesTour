@@ -3,6 +3,7 @@ import CookieConsent from "../components/Cookie";
 import { registerUser } from "../api/api";
 import { useState } from "react";
 import { t } from "i18next";
+import axios from "axios";
 
 const RegistrationPage = () => {
   const [formData, setFormData] = useState({
@@ -47,12 +48,15 @@ const RegistrationPage = () => {
       setSuccessMessage("Письмо с подтверждением отправлено вам на почту.");
       setIsSubmitted(true);
     } catch (error) {
-      setErrorMessage("Ошибка:" + error);
+      if (axios.isAxiosError(error) && error.response?.status === 400) {
+        setErrorMessage("Пользователь уже зарегистрирован в системе.");
+      } else {
+        setErrorMessage("Произошла ошибка. Попробуйте позже.");
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
-
   return (
     <div className="w-max mx-auto bg-white p-6 rounded-lg shadow-lg mt-10">
       <h2 className="text-2xl font-semibold text-gray-800 mb-4">Регистрация</h2>
@@ -98,7 +102,7 @@ const RegistrationPage = () => {
           />
         </div>
 
-        {/* Чекбокс для принятия политики конфиденциальности */}
+       
         <div className="mb-4 flex items-center">
           <input
             type="checkbox"

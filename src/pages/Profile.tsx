@@ -17,6 +17,18 @@ const ProfilePage = () => {
     international_passport_number: "",
   });
   const navigate = useNavigate();
+  
+  // Функция для проверки, заполнены ли все обязательные поля
+  const isFormValid = () => {
+    return (
+      formData.first_name !== "" &&
+      formData.last_name !== "" &&
+      formData.phone_number !== "" &&
+      formData.date_of_birth !== "" &&
+      formData.citizenship !== "" &&
+      formData.passport_number !== ""
+    );
+  };
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -25,7 +37,7 @@ const ProfilePage = () => {
           const data = await getUserInfo();  
           setFormData(data);  
         } catch (error) {
-          console.error("Ошибка при загрузке данных пользователя:", error);
+          console.error("Ошибка при заполнении данных пользователя:", error);
         }
       };
       fetchData();
@@ -39,11 +51,24 @@ const ProfilePage = () => {
 
   const handleSubmit = async () => {
     if (isAuthenticated) {
+      if (!isFormValid()) {
+        // Показываем уведомление о необходимости проверить данные
+        alert("Пожалуйста, убедитесь, что все обязательные поля заполнены.");
+        return;
+      }
+
       try {
         await putUserInfo(formData);  
         alert("Информация обновлена успешно");
-      } catch (error) {
-        alert("Произошла ошибка при обновлении информации: " + error);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error : any) {
+        if (error.response && error.response.status === 400) {
+          // Ошибка при отправке данных (например, поля формы некорректно заполнены)
+          alert("Проверьте заполнение данных.");
+        } else {
+          // Другие ошибки
+          alert("Проверьте заполнение данных.");
+        }
       }
     } else {
       alert("Вы не авторизованы.");
@@ -57,7 +82,7 @@ const ProfilePage = () => {
 
   return (
     <div className="max-w-4xl mx-auto py-8 px-4">
-      <h1 className="text-xl font-bold mb-6"> Личный кабинет</h1>
+      <h1 className="text-xl font-bold mb-6">Личный кабинет</h1>
       <div className="flex space-x-6">
         <div className="bg-white shadow-lg rounded-lg p-6 w-2/3">
           <h2 className="text-2xl font-bold mb-4">Здравствуйте!</h2>
@@ -104,7 +129,13 @@ const ProfilePage = () => {
           </div>
 
           <div className="mt-6 flex space-x-4">
-            <button onClick={handleSubmit} className="bg-yellow-500 text-white px-6 py-2 rounded-lg font-bold">Сохранить</button>
+            <button
+              onClick={handleSubmit}
+              className={`bg-yellow-500 text-white px-6 py-2 rounded-lg font-bold ${isFormValid() ? '' : 'opacity-50 cursor-not-allowed'}`}
+              disabled={!isFormValid()}
+            >
+              Сохранить
+            </button>
           </div>
         </div>
 
