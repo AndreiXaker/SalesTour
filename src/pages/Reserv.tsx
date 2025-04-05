@@ -45,7 +45,7 @@ export const Reserv = () => {
             </div>
           ))
         ) : (
-          <p className="text-center text-gray-500 text-lg">
+          <p className="flex justify-center items-center text-center text-gray-500 text-lg">
             Нет заказов, соответствующих выбранным категориям.
           </p>
         )}

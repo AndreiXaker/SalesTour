@@ -9,7 +9,7 @@ export const LoginPage = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { setAuth } = useAuthStore(); // setAuth для обновления состояния
+  const { setAuth } = useAuthStore();
   const [isChecked, setIsChecked] = useState(false); 
 
   useEffect(() => {
@@ -29,19 +29,14 @@ export const LoginPage = () => {
     try {
       const data = await loginUser(formData);
       
-      // Сохраняем токены в localStorage
-      localStorage.removeItem("access");
-      localStorage.removeItem("refresh");
       localStorage.setItem("access", data.access);
       localStorage.setItem("refresh", data.refresh);
       
-      // Получаем информацию о пользователе
+      
       const userInfo = await getUserInfo();
       
-      // Обновляем состояние с данными о пользователе и токеном
-      setAuth(data.access, userInfo); // передаем токен и данные пользователя
+      setAuth(data.access, userInfo); 
       
-      // Переходим на страницу профиля
       navigate("/profile");
     } catch (error) {
       console.error("Ошибка входа:", error);
