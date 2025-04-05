@@ -91,9 +91,9 @@ export const activateUser = async (uid : string, token : string) => {
 export const loginUser = async (user : IUser) => {
     try {
         const response = await apiClient.post("/jwt/create/", user);
-        const {access, email } = response.data;
+        const {access } = response.data;
 
-        useAuthStore.getState().setAuth(access,email);
+        useAuthStore.getState().setAuth(access);
         return response.data;   
         } catch (error) {
             throw new Error ("Ошибка авторизации пользователя" + error);
