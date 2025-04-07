@@ -1,11 +1,47 @@
 import { useTranslation } from 'react-i18next';
 import { Clock, MapPin, Users, Globe, Star, MessageSquare, Send } from 'lucide-react';
 import { useState } from 'react';
-
+import { feedbackApi, IFeedback } from '../api/api';
 const MainSections = () => {
   const { t } = useTranslation();
   const [isChecked, setIsChecked] = useState(false);
-  
+  const [formData, setFormData] = useState<Omit<IFeedback, "name">>({
+    email: "",
+    message: "",
+    name_client: "",
+  });
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!isChecked) {
+      alert("Вы должны согласиться с политикой конфиденциальности.");
+      return;
+    }
+
+    const feedbackData: IFeedback = {
+      ...formData,
+      name: "Обращение на обратную связи с главной страницы",
+    };
+
+    try {
+      await feedbackApi(feedbackData);
+      alert("Сообщение отправлено успешно!");
+      setFormData({ email: "", message: "", name_client: "" });
+      setIsChecked(false);
+    } catch (error) {
+      alert("Произошла ошибка при отправке сообщения.");
+      console.error(error);
+    }
+  };
+
   const whyUsReasons = [
     { icon: <Clock size={32} />, key: 'experience' },
     { icon: <MessageSquare size={32} />, key: 'support' },
@@ -149,62 +185,71 @@ const MainSections = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div className="bg-white rounded-lg shadow-md p-8">
               <h3 className="text-xl font-semibold mb-6">{t('sections.sendMessage')}</h3>
-              <form className="space-y-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {t('sections.name')}
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {t('sections.email')}
-                  </label>
-                  <input
-                    type="email"
-                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {t('sections.message')}
-                  </label>
-                  <textarea
-                    rows={4}
-                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  />
-                </div>
-                <div className="flex items-start">
-                <input
-                  type="checkbox"
-                  id="privacyPolicy"
-                  checked={isChecked}
-                  onChange={() => setIsChecked(!isChecked)}
-                  className="w-5 h-5 text-primary-500 border-gray-300 rounded focus:ring-primary-500"
-                />
-                <label htmlFor="privacyPolicy" className="ml-3 text-sm text-gray-700">
-                  {t("sections.agree")}{" "}
-                  <a
-                    href="/Personal.pdf"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 underline"
-                  >
-                    {t("sections.privacyPersonal")}
-                  </a>
-                </label>
-              </div>
-                <button
-                  type="submit"
-                  className="w-full bg-primary-500 text-white py-3 px-6 rounded-lg hover:bg-primary-600 transition-colors flex items-center justify-center gap-2"
+              <form className="space-y-6" onSubmit={handleSubmit}>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {t('sections.name')}
+              </label>
+              <input
+                type="text"
+                name="name_client"
+                value={formData.name_client}
+                onChange={handleChange}
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {t('sections.email')}
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {t('sections.message')}
+              </label>
+              <textarea
+                name="message"
+                rows={4}
+                value={formData.message}
+                onChange={handleChange}
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              />
+            </div>
+            <div className="flex items-start">
+              <input
+                type="checkbox"
+                id="privacyPolicy"
+                checked={isChecked}
+                onChange={() => setIsChecked(!isChecked)}
+                className="w-5 h-5 text-primary-500 border-gray-300 rounded focus:ring-primary-500"
+              />
+              <label htmlFor="privacyPolicy" className="ml-3 text-sm text-gray-700">
+                {t("sections.agree")}{" "}
+                <a
+                  href="/Personal.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 underline"
                 >
-                  <Send size={20} />
-                  {t('sections.submit')}
-                </button>
-              </form>
+                  {t("sections.privacyPersonal")}
+                </a>
+              </label>
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-primary-500 text-white py-3 px-6 rounded-lg hover:bg-primary-600 transition-colors flex items-center justify-center gap-2"
+            >
+              <Send size={20} />
+              {t('sections.submit')}
+            </button>
+            </form>
             </div>
             <div className="bg-white rounded-lg shadow-md p-8">
               <h3 className="text-xl font-semibold mb-6">{t('sections.ourContacts')}</h3>

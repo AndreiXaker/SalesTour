@@ -63,7 +63,6 @@ const ProfilePage = () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error : any) {
         if (error.response && error.response.status === 400) {
-          // Ошибка при отправке данных (например, поля формы некорректно заполнены)
           alert("Проверьте заполнение данных.");
         } else {
           // Другие ошибки
@@ -111,17 +110,34 @@ const ProfilePage = () => {
               </select>
             </div>
             <div>
-              <label className="block text-gray-700">Номер паспорта:</label>
-              <input type="text" name="passport_number" value={formData.passport_number} onChange={handleChange} className="w-full border rounded-lg p-2" />
+            <label className="block text-gray-700">Номер паспорта:</label>
+            <input
+              type="text"
+              name="passport_number"
+              value={formData.passport_number}
+              onChange={handleChange}
+              className="w-full border rounded-lg p-2"
+              placeholder="Например: 1234567890"
+            />
+            <p className="text-sm text-gray-500 mt-1">Введите без пробелов</p>
             </div>
             <div>
               <label className="block text-gray-700">Гражданство:</label>
               <input type="text" name="citizenship" value={formData.citizenship} onChange={handleChange} className="w-full border rounded-lg p-2" />
             </div>
             <div>
-              <label className="block text-gray-700">Номер загранпаспорта:</label>
-              <input type="text" name="international_passport_number" value={formData.international_passport_number} onChange={handleChange} className="w-full border rounded-lg p-2" />
+            <label className="block text-gray-700">Номер загранпаспорта:</label>
+            <input
+              type="text"
+              name="international_passport_number"
+              value={formData.international_passport_number}
+              onChange={handleChange}
+              className="w-full border rounded-lg p-2"
+              placeholder="Например: 9876543210"
+            />
+            <p className="text-sm text-gray-500 mt-1">Введите без пробелов</p>
             </div>
+
             <div className="col-span-2">
               <label className="block text-gray-700">Телефон:</label>
               <input type="tel" name="phone_number" value={formData.phone_number} onChange={handleChange} className="w-full border rounded-lg p-2" placeholder="+7 (___) ___-____" />

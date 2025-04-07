@@ -6,6 +6,27 @@ interface IUser {
     password : string
 }
 
+export interface IAppeal {
+  name : string,
+  phone : string,
+  r_dat : string,
+  source : string,
+  data_from : string,
+  tourist_count : number,
+  name_client : string
+  transport_type : string,
+  city_departure : string,
+  arrival_city : string,
+  comments : string,
+}
+
+export interface IFeedback {
+  name : string,
+  email : string,
+  message : string,
+  name_client : string
+}
+
 interface IUserInfo {
   first_name: string,
   last_name: string,
@@ -130,4 +151,30 @@ export const putUserInfo = async (userInfo : IUserInfo) => {
     } catch (error) {
       throw new Error("Ошибка при обновлении информации о пользователе" + error);
     }
+}
+//Отправка обратной связи
+export const feedbackApi = async (feedback : IFeedback) => {
+  try {
+        const response = await axios.post("https://master-turov.ru:8443/users/api/v1/create-lead-appeal/", feedback,{
+          headers : {
+            "Content-Type" : "application/json"
+          }
+        });
+        return response.data;
+} catch (error) {
+  throw new Error("Ошибка при отправке отзыва" + error);
+}
+}
+// Отправка обращений авиа и жд транспорта
+export const userAppealTransport = async (userAppeal : IAppeal) => {
+  try {
+    const response = await axios.post("https://master-turov.ru:8443/users/api/v1/create-lead/", userAppeal,{
+      headers : {
+        "Content-Type" : "application/json"
+      }
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при отправке обращения" + error);
+  }
 }

@@ -38,6 +38,22 @@ const RegistrationPage = () => {
       return;
     }
 
+    // Проверка на небезопасные пароли
+    const weakPasswords = ["1234", "password", "qwerty", "1111", "123456", "admin"];
+    if (weakPasswords.includes(formData.password.toLowerCase())) {
+      setErrorMessage("Пароль слишком простой. Пожалуйста, выберите более надёжный пароль.");
+      return;
+    }
+
+    // Проверка сложности пароля
+    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+    if (!strongPasswordRegex.test(formData.password)) {
+      setErrorMessage(
+        "Пароль должен содержать не менее 8 символов, включая заглавную букву, строчную букву, цифру и специальный символ."
+      );
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -57,6 +73,7 @@ const RegistrationPage = () => {
       setIsSubmitting(false);
     }
   };
+
   return (
     <div className="w-max mx-auto bg-white p-6 rounded-lg shadow-lg mt-10">
       <h2 className="text-2xl font-semibold text-gray-800 mb-4">Регистрация</h2>
@@ -87,6 +104,9 @@ const RegistrationPage = () => {
             className="w-full px-4 py-2 border rounded-lg"
             disabled={isSubmitted}
           />
+          <p className="text-xs text-gray-500 mt-1">
+            Пароль должен содержать не менее 8 символов, включая заглавную букву, строчную букву, цифру и специальный символ.
+          </p>
         </div>
 
         <div className="mb-4">
@@ -102,7 +122,6 @@ const RegistrationPage = () => {
           />
         </div>
 
-       
         <div className="mb-4 flex items-center">
           <input
             type="checkbox"

@@ -1,62 +1,54 @@
 import { useTranslation } from 'react-i18next';
-import { Plane, Send, MessageCircle } from 'lucide-react';
+import { Plane, Send } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import axios from 'axios';
 import { useState } from 'react';
 import CookieConsent from '../components/Cookie';
+import { userAppealTransport, IAppeal } from '../api/api';
 
-interface FlightFormData {
-  from: string;
-  to: string;
-  departDate: string;
-  returnDate: string;
-  passengers: string;
-  name: string;
-  contact: string;
-  comments: string;
-  consent: boolean;
-}
+
+type AppealFormData = IAppeal & {consent: boolean};
 
 const Aviatickets = () => {
   const { t } = useTranslation();
-  const { register, handleSubmit, formState: { errors } } = useForm<FlightFormData>();
+  const { register, handleSubmit, formState: { errors } } = useForm<AppealFormData>();
   const [statusMessage, setStatusMessage] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false); // Новое состояние для контроля кнопки
-  const [consent, setConsent] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false); 
   const [statusType, setStatusType] = useState<'success' | 'error'>('success');
 
-  const onSubmit = async (data: FlightFormData) => {
-    if (isSubmitting) return; // Если запрос уже выполняется, выходим
+  const onSubmit = async (data: IAppeal) => {
 
-    setIsSubmitting(true); // Устанавливаем состояние отправки
+    
 
-    const jsonPayload = {
-      name: data.name,
-      phone: data.contact,
-      email: "ivan@example.com", 
-      departure_city: data.from,
-      destination_city: data.to,
-      departure_date: data.departDate,
-      return_date: data.returnDate,
-      passengers_count: Number(data.passengers),
-      transport_type: "plane", 
-      comment: data.comments,
-      consent: consent 
+    if (isSubmitting) return; 
+    setIsSubmitting(true); 
+
+    const payload = {
+    name: "Обращение/Авиа",
+    phone: data.phone,
+    r_dat: data.r_dat, 
+    source: "website", 
+    data_from: data.data_from,
+    tourist_count: data.tourist_count,
+    name_client: data.name_client,
+    transport_type: "самолет",
+    city_departure: data.city_departure,
+    arrival_city: data.arrival_city,
+    comments: data.comments,
     };
     
     try {
-      const response = await axios.post('https://master-turov.ru:8443/users/api/v1/request-ticket/', jsonPayload);
-      console.log('Response:', response.data);
-      setStatusMessage('Запрос успешно отправлен!');
-      setStatusType('success');
+      console.log("Отправка payload:", payload);
+      await userAppealTransport(payload);
+      setStatusMessage("Запрос успешно отправлен!");
+      setStatusType("success");
     } catch (error) {
-      console.error('Error:', error);
-      setStatusMessage('Произошла ошибка при отправке запроса. Проверьте правильность введенных данных');
-      setStatusType('error');
+      console.error("Ошибка:", error);
+      setStatusMessage("Ошибка при отправке запроса. Проверьте правильность данных.");
+      setStatusType("error");
     } finally {
       setTimeout(() => {
-        setIsSubmitting(false); 
-        setStatusMessage(''); 
+        setIsSubmitting(false);
+        setStatusMessage('');
       }, 5000);
     }
   };
@@ -85,11 +77,11 @@ const Aviatickets = () => {
                   </label>
                   <input
                     type="text"
-                    {...register('from', { required: 'Это поле обязательно' })}
+                    {...register('city_departure', { required: 'Это поле обязательно' })}
                     className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     placeholder="Город вылета"
                   />
-                  {errors.from && <span className="text-red-500">{errors.from.message}</span>}
+                  {errors.city_departure && <span className="text-red-500">{errors.city_departure.message}</span>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -97,11 +89,11 @@ const Aviatickets = () => {
                   </label>
                   <input
                     type="text"
-                    {...register('to', { required: 'Это поле обязательно' })}
+                    {...register('arrival_city', { required: 'Это поле обязательно' })}
                     className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     placeholder="Город прилета"
                   />
-                  {errors.to && <span className="text-red-500">{errors.to.message}</span>}
+                  {errors.arrival_city && <span className="text-red-500">{errors.arrival_city.message}</span>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -109,10 +101,10 @@ const Aviatickets = () => {
                   </label>
                   <input
                     type="date"
-                    {...register('departDate', { required: 'Это поле обязательно' })}
+                    {...register('r_dat', { required: 'Это поле обязательно' })}
                     className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   />
-                  {errors.departDate && <span className="text-red-500">{errors.departDate.message}</span>}
+                  {errors.r_dat && <span className="text-red-500">{errors.r_dat.message}</span>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -120,7 +112,7 @@ const Aviatickets = () => {
                   </label>
                   <input
                     type="date"
-                    {...register('returnDate')}
+                    {...register('data_from')}
                     className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   />
                 </div>
@@ -131,7 +123,7 @@ const Aviatickets = () => {
                 {t('sections.numberOfPassengers')}
                 </label>
                 <select
-                  {...register('passengers')}
+                  {...register('tourist_count')}
                   className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 >
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
@@ -149,11 +141,11 @@ const Aviatickets = () => {
                   </label>
                   <input
                     type="text"
-                    {...register('name', { required: 'Это поле обязательно' })}
+                    {...register('name_client', { required: 'Это поле обязательно' })}
                     className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     placeholder="Как к вам обращаться"
                   />
-                  {errors.name && <span className="text-red-500">{errors.name.message}</span>}
+                  {errors.name_client && <span className="text-red-500">{errors.name_client.message}</span>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -161,11 +153,11 @@ const Aviatickets = () => {
                   </label>
                   <input
                     type="tel"
-                    {...register('contact', { required: 'Это поле обязательно' })}
+                    {...register('phone', { required: 'Это поле обязательно' })}
                     className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     placeholder="+7 (___) ___-__-__"
                   />
-                  {errors.contact && <span className="text-red-500">{errors.contact.message}</span>}
+                  {errors.phone && <span className="text-red-500">{errors.phone.message}</span>}
                 </div>
               </div>
 
@@ -183,18 +175,12 @@ const Aviatickets = () => {
               </div>
               <div className="mb-6">
         <div className="flex items-center">
-          <input
-            type="checkbox"
-            id="consent"
-            {...register('consent', { required: 'Необходимо согласие на обработку данных' })} 
-            checked={consent}
-            onChange={() => {
-              setConsent(!consent);
-            }}
-            className={`mr-2 h-5 w-5 ${
-              errors.consent ? "border-red-500" : "border-gray-300"
-            }`}
-          />
+                    <input
+              type="checkbox"
+              {...register('consent', {
+                required: 'Необходимо согласие на обработку данных',
+              })}
+            />
           <label htmlFor="privacyPolicy" className="ml-3 text-sm text-gray-700">
                   {t("sections.agree")}{" "}
                   <a
@@ -213,26 +199,13 @@ const Aviatickets = () => {
           </span>
         )}
       </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <button
-                  type="submit"
-                  disabled={isSubmitting} 
-                  className={`flex items-center justify-center gap-2 ${isSubmitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#25D366] hover:bg-[#128C7E]'} text-white px-6 py-3 rounded-lg transition-colors`}
-                >
-                  <MessageCircle size={20} />
-                  {isSubmitting ? 'Отправка...' : 'Отправить в WhatsApp'}
-                </button>
-                <button
-                type="submit"
-                disabled={isSubmitting}
-                className={`flex items-center justify-center gap-2 ${
-                  isSubmitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#0088cc] hover:bg-[#0077b5]'
-                } text-white px-6 py-3 rounded-lg transition-colors`}
-              >
-                <Send size={20} />
-                {isSubmitting ? 'Отправка...' : 'Отправить в Telegram'}
-              </button>
-              </div>
+            <button
+              type="submit"
+              className="w-full bg-primary-500 text-white py-3 px-6 rounded-lg hover:bg-primary-600 transition-colors flex items-center justify-center gap-2"
+            >
+              <Send size={20} />
+              {t('sections.submit')}
+            </button>
             </form>
           </div>
         </div>
