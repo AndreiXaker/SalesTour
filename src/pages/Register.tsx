@@ -4,7 +4,7 @@ import { registerUser } from "../api/api";
 import { useState } from "react";
 import { t } from "i18next";
 import axios from "axios";
-
+import { Input } from "antd";
 const RegistrationPage = () => {
   const [formData, setFormData] = useState({
     first_name: "",
@@ -18,7 +18,8 @@ const RegistrationPage = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-
+  
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -82,7 +83,7 @@ const RegistrationPage = () => {
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label className="block text-gray-600">Email</label>
-          <input
+          <Input
             type="email"
             name="email"
             value={formData.email}
@@ -95,7 +96,7 @@ const RegistrationPage = () => {
 
         <div className="mb-4">
           <label className="block text-gray-600">Пароль</label>
-          <input
+          <Input.Password
             type="password"
             name="password"
             value={formData.password}
@@ -111,7 +112,7 @@ const RegistrationPage = () => {
 
         <div className="mb-4">
           <label className="block text-gray-600">Подтверждение пароля</label>
-          <input
+          <Input.Password
             type="password"
             name="confirmPassword"
             value={formData.confirmPassword}

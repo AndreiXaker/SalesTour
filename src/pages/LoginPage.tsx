@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import CookieConsent from "../components/Cookie";
 import { activateUser, loginUser, getUserInfo } from "../api/api";
 import useAuthStore from "../store/authStore";
+import { Input } from "antd";
 
 export const LoginPage = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -46,7 +47,7 @@ export const LoginPage = () => {
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label className="block text-gray-600">Email</label>
-          <input
+          <Input
             type="email"
             name="email"
             value={formData.email}
@@ -58,7 +59,7 @@ export const LoginPage = () => {
 
         <div className="mb-4">
           <label className="block text-gray-600">Пароль</label>
-          <input
+          <Input.Password
             type="password"
             name="password"
             value={formData.password}
