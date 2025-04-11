@@ -84,6 +84,12 @@ export const LoginPage = () => {
             Зарегистрироваться
           </Link>
         </p>
+        <p className="text-gray-600 mt-2">
+          Забыли пароль?{" "}
+          <Link to="/reset-password-request" className="text-blue-500 underline">
+            Сбросить пароль
+          </Link>
+        </p>
       </div>
       <CookieConsent />
     </div>

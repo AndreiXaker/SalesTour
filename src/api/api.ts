@@ -6,6 +6,11 @@ interface IUser {
     password : string
 }
 
+interface ResetPasswordPayload {
+  uid: string;
+  token: string;
+  new_password: string;
+}
 export interface IAppeal {
   name : string,
   phone : string,
@@ -176,5 +181,27 @@ export const userAppealTransport = async (userAppeal : IAppeal) => {
     return response.data;
   } catch (error) {
     throw new Error("Ошибка при отправке обращения" + error);
+  }
+}
+
+export const resetPassword = async ({ uid, token, new_password }: ResetPasswordPayload) => {
+  try {
+    const response = await apiClient.post("/users/reset_password_confirm/", {
+      uid,
+      token,
+      new_password,
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при сбросе пароля: " + error);
+  }
+};
+
+export const sendPasswordResetEmail = async ( email : string) => {
+  try {
+    const response = await apiClient.post('/users/reset_password/', { email });
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при отправке запроса на сброс пароля: " + error);
   }
 }
