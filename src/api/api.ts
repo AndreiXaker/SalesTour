@@ -199,7 +199,12 @@ export const resetPassword = async ({ uid, token, new_password }: ResetPasswordP
 
 export const sendPasswordResetEmail = async ( email : string) => {
   try {
-    const response = await axios.post('https://master-turov.ru:8443/users/api/v1/auth/users/reset_password/', { email });
+    const response = await axios.post('https://master-turov.ru:8443/users/api/v1/auth/users/reset_password/', { email }, {
+       headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+    });
     return response.data;
   } catch (error) {
     throw new Error("Ошибка при отправке запроса на сброс пароля: " + error);
