@@ -21,8 +21,8 @@ import { refreshToken } from './api/api';
 import { Orders } from './pages/Orders';
 import { Reserv } from './pages/Reserv';
 import { LoginPage } from './pages/LoginPage';
-import ResetPassword from './pages/ResetPassword';
 import ResetPasswordPage from './pages/Reset';
+import PasswordResetRequestPage from './pages/ResetPassword';
 
 
 
@@ -62,7 +62,7 @@ function App() {
             <Route path="/profile" element={<ProfilePage />} />
             <Route path='/orders' element= {<Orders/>} />
             <Route path='/reserv' element= {<Reserv/>} />
-            <Route path='/reset-password' element={<ResetPassword />} />
+            <Route path='/reset-password' element={<PasswordResetRequestPage />} />
             <Route path="*" element={<p>Страница не найдена</p>} />
             <Route path="/reset-password-request/" element={<ResetPasswordPage />} />
           </Routes>
