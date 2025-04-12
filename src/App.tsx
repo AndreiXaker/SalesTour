@@ -22,6 +22,7 @@ import { Orders } from './pages/Orders';
 import { Reserv } from './pages/Reserv';
 import { LoginPage } from './pages/LoginPage';
 import ResetPassword from './pages/ResetPassword';
+import ResetPasswordPage from './pages/Reset';
 
 
 
@@ -63,7 +64,7 @@ function App() {
             <Route path='/reserv' element= {<Reserv/>} />
             <Route path='/reset-password' element={<ResetPassword />} />
             <Route path="*" element={<p>Страница не найдена</p>} />
-            <Route path="/reset-password-request/" element={<ResetPassword />} />
+            <Route path="/reset-password-request/" element={<ResetPasswordPage />} />
           </Routes>
         </div>
 

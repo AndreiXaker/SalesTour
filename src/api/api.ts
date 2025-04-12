@@ -157,7 +157,7 @@ export const putUserInfo = async (userInfo : IUserInfo) => {
       throw new Error("Ошибка при обновлении информации о пользователе" + error);
     }
 }
-//Отправка обратной связи
+
 export const feedbackApi = async (feedback : IFeedback) => {
   try {
         const response = await axios.post("https://master-turov.ru:8443/users/api/v1/create-lead-appeal/", feedback,{
@@ -199,7 +199,7 @@ export const resetPassword = async ({ uid, token, new_password }: ResetPasswordP
 
 export const sendPasswordResetEmail = async ( email : string) => {
   try {
-    const response = await apiClient.post('/users/reset_password/', { email });
+    const response = await axios.post('/users/reset_password/', { email });
     return response.data;
   } catch (error) {
     throw new Error("Ошибка при отправке запроса на сброс пароля: " + error);
