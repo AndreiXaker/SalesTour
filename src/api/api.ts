@@ -186,7 +186,7 @@ export const userAppealTransport = async (userAppeal : IAppeal) => {
 
 export const resetPassword = async ({ uid, token, new_password }: ResetPasswordPayload) => {
   try {
-    const response = await apiClient.post("/users/reset_password_confirm/", {
+    const response = await axios.post("https://master-turov.ru:8443/users/api/v1/auth/users/reset_password_confirm/", {
       uid,
       token,
       new_password,
@@ -199,7 +199,7 @@ export const resetPassword = async ({ uid, token, new_password }: ResetPasswordP
 
 export const sendPasswordResetEmail = async ( email : string) => {
   try {
-    const response = await axios.post('/users/reset_password/', { email });
+    const response = await axios.post('https://master-turov.ru:8443/users/api/v1/auth/users/reset_password/', { email });
     return response.data;
   } catch (error) {
     throw new Error("Ошибка при отправке запроса на сброс пароля: " + error);
