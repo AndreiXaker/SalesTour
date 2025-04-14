@@ -1,18 +1,32 @@
 import { useEffect, useState } from "react";
 import { usersOrders } from "../api/api";
 
+interface OrderDocument {
+  id: number;
+  file_url: string;
+  uploaded_at: string;
+}
+
+interface Order {
+  id: number;
+  category: string;
+  category_display: string;
+  description: string;
+  price: string;
+  created_at: string;
+  documents?: OrderDocument[];
+}
+
 export const Reserv = () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [orders, setOrders] = useState<any[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [error, setError] = useState<string>("");
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await usersOrders();
+        const response: Order[] = await usersOrders();
         const filteredOrders = response.filter(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (order: any) =>
+          (order) =>
             order.category_display === "ЖД" ||
             order.category_display === "Авибилеты" ||
             order.category_display === "Круизы" ||
@@ -29,23 +43,54 @@ export const Reserv = () => {
   }, []);
 
   if (error) {
-    return <div>{error}</div>;
+    return <div className="text-red-500 text-center mt-4">{error}</div>;
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen">
-      <div>
+    <div className="flex justify-center items-start py-10 min-h-screen bg-gray-50">
+      <div className="w-full max-w-3xl px-4">
         {orders.length > 0 ? (
           orders.map((order) => (
-            <div key={order.id} className="order-item">
-              <h3>{order.category_display}</h3>
-              <p>{order.description}</p>
-              <p>Цена: {order.price}</p>
-              <p>Дата создания: {order.created_at}</p>
+            <div
+              key={order.id}
+              className="bg-white shadow-md rounded-xl p-6 mb-6 border border-gray-200"
+            >
+              <h3 className="text-xl font-semibold text-blue-600 mb-2">
+                {order.category_display}
+              </h3>
+              <p className="text-gray-700 mb-1">
+                <span className="font-medium">Описание:</span> {order.description}
+              </p>
+              <p className="text-gray-700 mb-1">
+                <span className="font-medium">Цена:</span> {order.price} ₽
+              </p>
+              <p className="text-gray-700 mb-4">
+                <span className="font-medium">Дата создания:</span> {order.created_at}
+              </p>
+
+              {order.documents && order.documents.length > 0 && (
+                <div className="mt-2">
+                  <h4 className="text-sm font-semibold text-gray-800 mb-1">Документы:</h4>
+                  <ul className="list-disc list-inside">
+                    {order.documents.map((doc) => (
+                      <li key={doc.id}>
+                        <a
+                          href={doc.file_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-500 underline hover:text-blue-700"
+                        >
+                          Скачать документ (загружен {doc.uploaded_at})
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           ))
         ) : (
-          <p className="flex justify-center items-center text-center text-gray-500 text-lg">
+          <p className="text-center text-gray-500 text-lg">
             Нет заказов, соответствующих выбранным категориям.
           </p>
         )}
