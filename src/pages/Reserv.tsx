@@ -28,7 +28,7 @@ export const Reserv = () => {
         const filteredOrders = response.filter(
           (order) =>
             order.category_display === "ЖД" ||
-            order.category_display === "Авибилеты" ||
+            order.category_display === "Авиабилеты" ||
             order.category_display === "Круизы" ||
             order.category_display === "Санатории" ||
             order.category_display === "Туры"
